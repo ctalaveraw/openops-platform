@@ -1,0 +1,13 @@
+[project]
+name = "openops-platform"
+version = "0.0.0"
+requires-python = ">=3.12,<3.13"
+dependencies = []
+
+[dependencies-groups]
+dev = ["pymarkdownlnt==0.9.42"]
+
+[tool.uv]
+# This repository uses Python tooling without itself being an installable Python app
+package = false
+required-version = "==0.13.9"
