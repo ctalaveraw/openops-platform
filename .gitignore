@@ -1,0 +1,5 @@
+# Local Python tooling and generated output
+/.venv/
+/build/
+/site/
+__pycache__/

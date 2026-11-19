@@ -24,3 +24,12 @@ The [OpenOps Platform Engineering Handbook](https://github.com/ctalaveraw/openop
 - Reviewable changes, failure tests, and recovery evidence are prerequisites for declaring work complete.
 
 The initial candidate workload is a browser-rendered static application. A Forgejo-first control plane and team communication system are planned for evaluation. Neither choice should be described as implemented until verified.
+
+## Local checks
+
+### Markdown
+
+Use Git, GNU Make, Python 3.12, and uv 0.13.9.
+Run `make setup`, then `make check`.
+
+See [the Markdown check instructions](docs/ci/markdown.md).
