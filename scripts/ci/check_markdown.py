@@ -19,7 +19,7 @@ def main() -> int:
         )
         return 2
 
- print("RUN lint-markdown: repository Markdown (Git ignores applied)", flush=True)
+    print("RUN lint-markdown: repository Markdown (Git ignores applied)", flush=True)
     
     # construct the PyMarkdown command  
     result = subprocess.run(
