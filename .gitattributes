@@ -1,0 +1,2 @@
+vendor/slopmonster/deslop.py -text
+vendor/slopmonster/LICENSE -text
