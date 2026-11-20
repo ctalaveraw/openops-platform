@@ -14,7 +14,7 @@ help:
 	@echo "setup			Install locked Python tooling"
 	@echo "doctor-python	Check the Python tooling environment"
 	@echo "lint-markdown	Check repository Markdown"
-	@echo "lint-prose		Review docuumentation prose"
+	@echo "lint-prose		Review documentation prose"
 	@echo "check				Run required checks"
 
 # Install locked Python tooling into this checkout
@@ -38,4 +38,3 @@ lint-markdown: doctor-python
 # "lint-prose" requires "doctor-python", then runs document prose check
 lint-prose: doctor-python
 	@.venv/bin/python scripts/ci/check_prose.py
-

@@ -35,14 +35,11 @@ def markdown_inputs() -> list[Path]:
         stdout=subprocess.PIPE,
         check=True,
     )
+    # Preserves filenames and builds set with parsed filenames
     paths = {ROOT / os.fsdecode(name) for name in listed.stdout.split(b"\0") if name}
+    # Returns existing markdown files, excluding deleted tracked files
     return sorted(path for path in paths if path.suffix == ".md" and path.is_file())
 
-# Preserves filenames and builds set with parsed filenames
-paths = {ROOT / os.fsdecode(name) for name in listed.stdout.split(b"\0") if name}
-
-# Returns existing markdown files, excluding deleted tracked files
-return sorted(path for path in paths if path.suffix == ".md" and path.is_file())
 
 # Executing function
 def main() -> int:
