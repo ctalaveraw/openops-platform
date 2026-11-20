@@ -1,6 +1,9 @@
 # OpenOps Platform
 
-A collaborative platform-engineering reference environment focused on independently operated developer tooling, reproducible infrastructure, secure software delivery, GitOps, observability, and operational recovery.
+OpenOps is a shared platform engineering project. We are building a reference
+environment for independently operated developer tooling and reproducible
+infrastructure. The planned work covers secure software delivery through GitOps,
+with observability and recovery procedures for deployed services.
 
 ## Project status
 
@@ -33,3 +36,9 @@ Use Git, GNU Make, Python 3.12, and uv 0.13.9.
 Run `make setup`, then `make check`.
 
 See [the Markdown check instructions](docs/ci/markdown.md).
+
+### Prose
+
+Run `make lint-prose` to review English prose in `README.md` and `docs/`.
+
+See [the prose check instructions](docs/ci/prose.md).
