@@ -8,15 +8,16 @@
 SHELL := /bin/sh
 
 # Define tasks, .PHONY is used to not collide with files that match task names
-.PHONY: help setup doctor-python check lint lint-markdown
+.PHONY: help setup doctor-python check lint lint-markdown lint-prose
 
 help:
 	@echo "setup			Install locked Python tooling"
 	@echo "doctor-python	Check the Python tooling environment"
 	@echo "lint-markdown	Check repository Markdown"
+	@echo "lint-prose		Review docuumentation prose"
 	@echo "check				Run required checks"
 
-# Setup a new Python dependency map
+# Install locked Python tooling into this checkout
 setup:
 	uv sync --locked --no-python-downloads
 
@@ -30,6 +31,11 @@ check: lint
 # "lint" requires "lint-markdown"
 lint: lint-markdown
 
-# "lint-markdown" requires "doctor-python", then runs the wrapper script
+# "lint-markdown" requires "doctor-python", then runs markdown check
 lint-markdown: doctor-python
 	@.venv/bin/python scripts/ci/check_markdown.py
+
+# "lint-prose" requires "doctor-python", then runs document prose check
+lint-prose: doctor-python
+	@.venv/bin/python scripts/ci/check_prose.py
+
