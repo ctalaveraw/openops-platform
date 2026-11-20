@@ -8,7 +8,7 @@
 SHELL := /bin/sh
 
 # Define tasks, .PHONY is used to not collide with files that match task names
-.PHONY: help setup doctor-python check lint lint-markdown lint-prose
+.PHONY: help bootstrap setup doctor-python check lint lint-markdown lint-prose
 
 help:
 	@echo "setup			Install locked Python tooling"
