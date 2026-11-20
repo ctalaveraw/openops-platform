@@ -7,9 +7,14 @@ import sys
 from importlib.util import find_spec
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2] # later refactor
-CONFIG = ROOT / ".yamllint.yaml"
+# Locate this checkout from the script's own location.
+# Layout: <checkout>/scripts/ci/check_yaml.py
+# parents[0] = ci/, parents[1] = scripts/, parents[2] = <checkout>
+# This lets the wrapper work independently of the terminal's current directory.
+ROOT = Path(__file__).resolve().parents[2]
 
+# Always load the configuration belonging to this checkout.
+CONFIG = ROOT / ".yamllint.yaml"
 
 def yaml_inputs() -> list[Path]:
     listed = subprocess.run(
