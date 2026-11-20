@@ -43,3 +43,9 @@ See [the Markdown check instructions](docs/ci/markdown.md).
 Run `make lint-prose` to review English prose in `README.md` and `docs/`.
 
 See [the prose check instructions](docs/ci/prose.md).
+
+### CI
+
+The GitHub Actions workflow runs the required checks for pull requests and pushes to `main`.
+
+See [the workflow instructions and action inventory](docs/ci/checks.md).
