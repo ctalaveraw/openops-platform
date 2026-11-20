@@ -27,11 +27,8 @@ jobs:
           version-file: pyproject.toml
           enable-cache: false
 
-      - name: Install project Python
-        run: uv python install
-
-      - name: Install locked tooling
-        run: make setup
+      - name: Prepare repository tooling
+        run: make bootstrap
 
       - name: Run repository checks
         run: make check

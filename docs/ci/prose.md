@@ -6,7 +6,7 @@ does not ignore. Files outside that scope are excluded.
 
 ## Setup
 
-Run `make setup` to prepare the existing Python tooling environment.
+Run `make bootstrap` to prepare Python and the locked tooling environment.
 SlopMonster uses Python's standard library and adds no package dependencies.
 
 ## Behavior

@@ -1,5 +1,5 @@
-# Requires GNU Make, Git, Python 3.12, and the uv version in pyproject.toml.
-# Run from the repository root, or use make -C /path/to/openops-platform.
+# Requires GNU Make, Git, and the uv version in pyproject.toml.
+# Run make bootstrap to prepare Python and the locked tooling.
 
 # Running without options shows help by default
 .DEFAULT_GOAL := help
@@ -12,10 +12,16 @@ SHELL := /bin/sh
 
 help:
 	@echo "setup			Install locked Python tooling"
+	@echo "bootstrap		Prepare Python and locked tooling"
 	@echo "doctor-python	Check the Python tooling environment"
 	@echo "lint-markdown	Check repository Markdown"
 	@echo "lint-prose		Review documentation prose"
 	@echo "check				Run required checks"
+
+# Prepare the project runtime, then install locked tooling
+bootstrap:
+	uv python install --no-bin
+	$(MAKE) setup
 
 # Install locked Python tooling into this checkout
 setup:
