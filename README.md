@@ -38,6 +38,13 @@ Bootstrap installs Python 3.12 in uv's managed storage and the locked tools in `
 
 See [the Markdown check instructions](docs/ci/markdown.md).
 
+### YAML
+
+Run `make lint-yaml` to check repository YAML.
+This check also runs through `make check`.
+
+See [the YAML check instructions](docs/ci/yaml.md).
+
 ### Prose
 
 Run `make lint-prose` to review English prose in `README.md` and `docs/`.
