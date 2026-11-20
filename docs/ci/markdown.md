@@ -7,9 +7,11 @@ The required `make check` gate currently contains only this check.
 
 ## Setup
 
-Use Git, GNU Make, Python 3.12, and uv 0.13.9.
-Run `make setup` to install the versions recorded in `uv.lock`.
-Package installation can require network access.
+Use Git, GNU Make, and uv 0.13.9.
+Run `make bootstrap` to install the Python version selected by `.python-version`,
+then the tools recorded in `uv.lock`.
+Python and package downloads can require network access.
+Use `make setup` to sync the locked tools when Python is already available.
 
 ## Scope
 

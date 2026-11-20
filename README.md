@@ -32,8 +32,9 @@ The initial candidate workload is a browser-rendered static application. A Forge
 
 ### Markdown
 
-Use Git, GNU Make, Python 3.12, and uv 0.13.9.
-Run `make setup`, then `make check`.
+Use Git, GNU Make, and uv 0.13.9.
+Run `make bootstrap`, then `make check`.
+Bootstrap installs Python 3.12 in uv's managed storage and the locked tools in `.venv`.
 
 See [the Markdown check instructions](docs/ci/markdown.md).
 
@@ -42,3 +43,9 @@ See [the Markdown check instructions](docs/ci/markdown.md).
 Run `make lint-prose` to review English prose in `README.md` and `docs/`.
 
 See [the prose check instructions](docs/ci/prose.md).
+
+### CI
+
+The GitHub Actions workflow runs the required checks for pull requests and pushes to `main`.
+
+See [the workflow instructions and action inventory](docs/ci/checks.md).
