@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "source": "ci",
+  "provider": "forgejo",
+  "event": "validation_failed",
+  "repository": "example/openops-platform",
+  "workflow": "Repository checks",
+  "revision": "0123456789abcdef0123456789abcdef01234567",
+  "severity": "warning",
+  "idempotency_key": "forgejo:repository-checks:456:1:failure",
+  "evidence_url": "https://forge.example.invalid/example/openops-platform/actions/runs/456",
+  "destination": {
+    "channel": "development-events",
+    "topic": "CI / Repository checks"
+  }
+}
