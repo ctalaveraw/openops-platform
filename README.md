@@ -54,6 +54,13 @@ This check also runs through `make check`.
 
 See [the Python check instructions](docs/ci/python.md).
 
+### Shell
+
+Run `make lint-shell` to check repository shell scripts.
+This target also runs through `make check`.
+
+See [the shell check instructions](docs/ci/shell.md).
+
 ### Prose
 
 Run `make lint-prose` to review English prose in `README.md` and `docs/`.

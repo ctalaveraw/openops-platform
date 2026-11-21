@@ -13,6 +13,7 @@ Bootstrap installs the Python version selected by `.python-version`, then syncs
 the tools in `uv.lock` into `.venv`.
 The required checks cover Markdown and YAML.
 Python linting and formatting are also required.
+ShellCheck runs when shell scripts are present.
 Run `make lint-prose` for the optional prose review.
 
 ## Hosted workflow

@@ -8,7 +8,7 @@
 SHELL := /bin/sh
 
 # Define tasks, .PHONY is used to not collide with files that match task names
-.PHONY: help bootstrap setup doctor-python check lint lint-markdown lint-yaml lint-python lint-prose
+.PHONY: help bootstrap setup doctor-python check lint lint-markdown lint-yaml lint-python lint-shell lint-prose
 
 help:
 	@echo "setup			Install locked Python tooling"
@@ -17,6 +17,7 @@ help:
 	@echo "lint-markdown	Check repository Markdown"
 	@echo "lint-yaml		Check repository YAML"
 	@echo "lint-python		Check Python lint and formatting"
+	@echo "lint-shell		Check repository shell scripts"
 	@echo "lint-prose		Check documentation prose"
 	@echo "check			Run required checks"
 
@@ -36,8 +37,8 @@ doctor-python:
 # "check" requires "lint"
 check: lint
 
-# "lint" requires Markdown, YAML, and Python checks
-lint: lint-markdown lint-yaml lint-python
+# "lint" runs the required source checks
+lint: lint-markdown lint-yaml lint-python lint-shell
 
 # "lint-markdown" requires "doctor-python", then runs markdown check
 lint-markdown: doctor-python
@@ -50,6 +51,10 @@ lint-yaml: doctor-python
 # "lint-python" checks source without applying fixes
 lint-python: doctor-python
 	@.venv/bin/python scripts/ci/check_python.py
+
+# "lint-shell" checks selected shell source without executing it
+lint-shell: doctor-python
+	@.venv/bin/python scripts/ci/check_shell.py
 
 # "lint-prose" requires "doctor-python", then runs document prose check
 lint-prose: doctor-python
