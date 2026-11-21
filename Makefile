@@ -17,7 +17,7 @@ help:
 	@echo "lint-markdown	Check repository Markdown"
 	@echo "lint-yaml		Check repository YAML"
 	@echo "lint-python		Check Python lint and formatting"
-	@echo "lint-shell\t\tCheck repository shell scripts"
+	@echo "lint-shell		Check repository shell scripts"
 	@echo "lint-prose		Check documentation prose"
 	@echo "check			Run required checks"
 
