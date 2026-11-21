@@ -31,6 +31,11 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Check fixture and delivery prose
+        run: |
+          make -C apps/hello-world prose-check
+          python3 vendor/slopmonster/deslop.py docs/delivery/hello-world.md
+
       - name: Run standalone application checks
         run: make -C apps/hello-world check
 
@@ -50,6 +55,11 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           persist-credentials: false
+
+      - name: Check fixture and delivery prose
+        run: |
+          make -C apps/hello-world prose-check
+          python3 vendor/slopmonster/deslop.py docs/delivery/hello-world.md
 
       - name: Run standalone application checks
         run: make -C apps/hello-world check

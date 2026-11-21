@@ -3,6 +3,8 @@
 The application is a static banner under `apps/hello-world/public/`.
 The other files in that directory are offline validation specimens.
 The container includes only the served files.
+The NGINX base is pinned to the image digest verified in the PR smoke run;
+update that digest through a reviewed change, not a moving base tag.
 
 ## Independent and combined checks
 
