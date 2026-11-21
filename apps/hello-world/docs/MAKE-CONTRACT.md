@@ -18,12 +18,11 @@ contact the network.
 
 ## What the parent may do later
 
-A future root Makefile could call this child with:
+A future root Makefile could call this child with a one-line recipe:
 
 ```makefile
 .PHONY: check-hello
-check-hello:
-	$(MAKE) -C apps/hello-world check
+check-hello: ; $(MAKE) -C apps/hello-world check
 ```
 
 **That rule has not been added.** The root Makefile still checks the platform.
