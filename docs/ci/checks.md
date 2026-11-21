@@ -14,6 +14,7 @@ the tools in `uv.lock` into `.venv`.
 The required checks cover Markdown and YAML.
 Python linting and formatting are also required.
 ShellCheck runs when shell scripts are present.
+The gate also validates GitHub Actions workflows.
 Run `make lint-prose` for the optional prose review.
 
 ## Hosted workflow

@@ -36,3 +36,4 @@ Review findings for context and keep the intended meaning when editing.
 This target is optional during evaluation.
 The required gate covers Markdown and YAML.
 It also checks Python and any selected shell scripts.
+The gate also validates GitHub Actions workflows.
