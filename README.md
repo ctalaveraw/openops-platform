@@ -68,6 +68,13 @@ This target also runs through `make check`.
 
 See [the JSON check instructions](docs/ci/json.md).
 
+### TOML
+
+Run `make lint-toml` to parse repository TOML, including `uv.lock`.
+This target also runs through `make check`.
+
+See [the TOML check instructions](docs/ci/toml.md).
+
 ### Prose
 
 Run `make lint-prose` to review English prose in `README.md` and `docs/`.
