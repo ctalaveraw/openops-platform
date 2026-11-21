@@ -1,5 +1,7 @@
 # OpenOps Platform
 
+[![Repository checks](https://github.com/ctalaveraw/openops-platform/actions/workflows/lint.yml/badge.svg?branch=main&event=push)](https://github.com/ctalaveraw/openops-platform/actions/workflows/lint.yml)
+
 OpenOps is a shared platform engineering project. We are building a reference
 environment for independently operated developer tooling and reproducible
 infrastructure. The planned work covers secure software delivery through GitOps,
