@@ -6,6 +6,7 @@ dependencies = []
 
 [dependency-groups]
 dev = [
+    "actionlint-py==1.7.12.25",
     "pymarkdownlnt==0.9.42",
     "ruff==0.17.6",
     "shellcheck-py==0.11.0.1",
