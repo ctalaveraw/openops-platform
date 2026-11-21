@@ -25,7 +25,7 @@ and commit IDs. Preview them without sending them to the live channel.
 To preview the second provider's example, use
 `examples/notifications/forgejo-failure.json` instead.
 Both producers use the same internal envelope. Each producer fills it from its
-trusted CI context; provider webhook parsing and live Forgejo integration remain
+trusted CI context. Provider webhook parsing and live Forgejo integration remain
 separate work.
 
 ## Event version 1
@@ -42,12 +42,12 @@ See the [GitHub example](../../examples/notifications/github-failure.json) and
 | `repository` | Repository name, up to 120 characters |
 | `workflow` | Workflow name, up to 120 characters |
 | `revision` | Full lowercase Git commit ID: 40 or 64 hexadecimal characters |
-| `severity` | Failure: `warning` or `error`; recovery: `info` |
+| `severity` | Failure: `warning` or `error`. Recovery: `info`. |
 | `idempotency_key` | Stable event identifier, up to 200 characters |
-| `evidence_url` | Canonical HTTPS run link, up to 2048 characters; no credentials, query or fragment |
+| `evidence_url` | Canonical HTTPS run link, up to 2048 characters. No credentials. Queries and fragments are excluded. |
 | `destination.channel` | Intended channel, up to 80 characters |
 | `destination.topic` | Stable workflow topic, up to 60 characters |
-| `recovery_of` | Required for recovery; identifies the earlier failure |
+| `recovery_of` | Required for recovery. Identifies the earlier failure. |
 
 Text fields are single lines with no leading or trailing whitespace. Missing,
 unknown, duplicate or incorrectly typed fields are rejected. The file must be
@@ -69,7 +69,7 @@ chmod 600 /absolute/private/path/zuliprc
 
 The command reads `[api]` values `site`, `email` and `key` from that file.
 It keeps authentication in an HTTP header and verifies TLS. It uses Python's
-default trusted certificates; custom CA/client certificate options from the
+default trusted certificates. Custom CA/client certificate options from the
 official Python bindings are outside this command's current interface.
 
 For a real event, use the following command after substituting the private path,
@@ -118,7 +118,7 @@ remains follow-up work in [#115](https://github.com/ctalaveraw/openops-platform/
 When integrating the workflow, preserve the validation job's actual result and
 report notification failures as warnings. Keep bot credentials in the trusted
 notification execution context. Privileged notification code must come from
-reviewed source; PR-controlled code and event data must not gain those credentials.
+reviewed source. PR-controlled code and event data must not gain those credentials.
 This change makes no workflow or credential-storage changes in GitHub.
 
 ## Run offline tests
@@ -127,11 +127,14 @@ This change makes no workflow or credential-storage changes in GitHub.
 .venv/bin/python -m unittest discover -s tests -v
 ```
 
-The suite uses fake credentials and in-memory HTTP responses. It covers event
-validation, provider fixtures, recovery references, message formatting,
-organization/channel checks, authentication failures, rate limits, redirects,
-timeouts and malformed responses. CLI tests also check exit codes, preview's
-credential/network isolation and invocation from another working directory.
+The suite uses fake credentials and in-memory HTTP responses.
+It covers event validation and provider fixtures.
+Separate cases check recovery references and message formatting.
+The suite also exercises organization/channel checks.
+HTTP cases cover authentication failures and rate limits.
+Other cases check redirects and timeouts. Malformed responses are also tested.
+CLI tests check exit codes and preview's credential/network isolation.
+They also verify invocation from another working directory.
 
 `.github/workflows/notifications-tests.yml` runs this same command for changes to
 the notification tools and their inputs. It uses the existing pinned checkout
