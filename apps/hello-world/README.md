@@ -47,7 +47,9 @@ with Ctrl+C. The container uses unprivileged NGINX instead.
   None is read by the web page.
 - The Python scripts are test and tooling code, not application services.
 - The component declaration and checksum sample are tested without Docker.
-- Root CI, root Makefile, registry and platform deployment are unchanged.
+- After the delivery-wiring PR merges, root `make check` delegates to this
+  component's `make check`. Image builds and publication remain separate.
+- There is no live cluster deployment from this folder.
 
 Use `make prose-check` in the full OpenOps checkout for the vendored
 SlopMonster review; it is opt-in until the platform adopts this workload.

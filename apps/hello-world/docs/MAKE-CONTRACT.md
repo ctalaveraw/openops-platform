@@ -16,18 +16,17 @@ From this directory, use `make check`. Both forms run the same tasks.
 `check` uses local Python and shell tools. It does not start a container or
 contact the network.
 
-## What the parent may do later
+## Parent delegation
 
-A future root Makefile could call this child with a one-line recipe:
+The root Makefile now has a `check-apps` target that calls:
 
-```makefile
-.PHONY: check-hello
-check-hello: ; $(MAKE) -C apps/hello-world check
+```sh
+make -C apps/hello-world check
 ```
 
-**That rule has not been added.** The root Makefile still checks the platform.
-Its CI may discover source files in this folder, but it does not call the child
-`check` target. Make passes a failing child exit status back to its caller.
+`make check` runs the platform's checks and then the child target.
+A failing child exits nonzero and makes the parent check fail.
+Neither command builds an image, starts a container or publishes anything.
 
 The same pattern can be considered later for provisioning and host-baseline
 components. Each would keep its own Makefile, tests and dependencies. This

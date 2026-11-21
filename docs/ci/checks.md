@@ -20,6 +20,8 @@ Python linting and formatting are also required.
 ShellCheck runs when shell scripts are present.
 Application HTML and CSS are checked when present.
 The gate also validates GitHub Actions workflows.
+The root check delegates to the Hello World component's offline tests.
+See [Hello World delivery](../delivery/hello-world.md) for separate image checks.
 Run `make lint-prose` for the optional prose review.
 
 ## Hosted workflow

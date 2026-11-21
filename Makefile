@@ -8,7 +8,7 @@
 SHELL := /bin/sh
 
 # Define tasks, .PHONY is used to not collide with files that match task names
-.PHONY: help bootstrap setup doctor-python check lint lint-markdown lint-yaml lint-python lint-shell lint-json lint-toml lint-make lint-web lint-prose validate-actions
+.PHONY: help bootstrap setup doctor-python check check-apps lint lint-markdown lint-yaml lint-python lint-shell lint-json lint-toml lint-make lint-web lint-prose validate-actions
 
 help:
 	@echo "setup			Install locked repository tooling"
@@ -24,6 +24,7 @@ help:
 	@echo "lint-web		Check application HTML and CSS"
 	@echo "lint-prose		Check documentation prose"
 	@echo "validate-actions	Check GitHub Actions workflows"
+	@echo "check-apps\t\tRun independent application checks"
 	@echo "check			Run required checks"
 
 # Prepare the project runtime, then install locked tooling
@@ -40,8 +41,8 @@ setup:
 doctor-python:
 	@uv sync --locked --no-python-downloads --offline --check --quiet
 
-# "check" requires source lint and workflow validation
-check: lint validate-actions
+# "check" requires platform gates and application checks
+check: lint validate-actions check-apps
 
 # "lint" runs the required source checks
 lint: lint-markdown lint-yaml lint-python lint-shell lint-json lint-toml lint-make lint-web
@@ -85,3 +86,7 @@ lint-prose: doctor-python
 # "validate-actions" checks workflow definitions and embedded shell source
 validate-actions: doctor-python
 	@.venv/bin/python scripts/ci/validate_actions.py
+
+# Applications own their checks. Root Make only delegates; no container is started.
+check-apps:
+	@$(MAKE) -C apps/hello-world check
