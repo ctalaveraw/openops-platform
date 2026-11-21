@@ -8,7 +8,7 @@ Run these commands from `apps/hello-world/`.
 | `make test` | No | Python unit tests only |
 | `make lint` | No | Script syntax and source/fixture validation |
 | `make run` | No | Local HTTP server; runs until Ctrl+C |
-| `make smoke` | Running HTTP server | Banner and `/healthz` over HTTP |
+| `make smoke` | Running HTTP server | Banner, CSS, `/healthz` and expected 404 |
 | `make schema-check` | No | Full JSON Schema, YAML and XSD with optional Python packages |
 | `make prose-check` | No | README, file map, check notes and banner with vendored SlopMonster |
 | `make compose-check` | Docker CLI | Compose file structure; does not start services |
