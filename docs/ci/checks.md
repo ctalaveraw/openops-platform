@@ -11,12 +11,14 @@ make check
 
 Bootstrap installs the Python version selected by `.python-version`, then syncs
 the tools in `uv.lock` into `.venv`.
+It also installs JavaScript lint dependencies from `package-lock.json`.
 The required checks cover Markdown and YAML.
 JSON syntax and notification event examples are checked too.
 TOML parsing includes `uv.lock`.
 Makefile source and public interfaces are checked too.
 Python linting and formatting are also required.
 ShellCheck runs when shell scripts are present.
+Application HTML and CSS are checked when present.
 The gate also validates GitHub Actions workflows.
 Run `make lint-prose` for the optional prose review.
 
