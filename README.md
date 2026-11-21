@@ -9,7 +9,10 @@ with observability and recovery procedures for deployed services.
 
 ## Project status
 
-**Foundation and architecture planning.** The intended system is documented but must not be assumed to be deployed. Work proceeds in independently testable milestones; implementation and operational claims require evidence from this repository.
+**Source checks and a disposable app are implemented.** The Hello World fixture
+can be tested without a container or a cluster. The delivery workflow tests a
+local container on PRs and is configured to publish from trusted `main` pushes.
+No live Kubernetes deployment has been verified.
 
 ## First workload
 
@@ -37,7 +40,9 @@ The [OpenOps Platform Engineering Handbook](https://github.com/ctalaveraw/openop
 - Critical workflows are reproducible using owned scripts, portable tools, and standard interfaces.
 - Reviewable changes, failure tests, and recovery evidence are prerequisites for declaring work complete.
 
-The initial candidate workload is a browser-rendered static application. A Forgejo-first control plane and team communication system are planned for evaluation. Neither choice should be described as implemented until verified.
+The first workload is the static Hello World fixture. GitHub remains the
+canonical source repository. Forgejo and Zulip are operated separately in the
+homelab; OpenOps-specific rollout and parity checks remain independent tasks.
 
 ## Local checks
 
