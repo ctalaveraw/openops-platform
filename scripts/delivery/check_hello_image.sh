@@ -2,7 +2,7 @@
 # Build and smoke-test one local image. No registry or cluster access.
 set -eu
 
-ROOT=$(CDPATH= cd "$(dirname "$0")/../.." && pwd)
+ROOT=$(CDPATH="" cd "$(dirname "$0")/../.." && pwd)
 cd "$ROOT"
 
 image=${IMAGE:-openops-hello-world:ci}
