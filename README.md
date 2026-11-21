@@ -61,18 +61,25 @@ This target also runs through `make check`.
 
 See [the shell check instructions](docs/ci/shell.md).
 
-### Actions
+### JSON
 
-Run `make validate-actions` to validate GitHub workflow definitions.
+Run `make lint-json` to parse repository JSON and validate notification examples.
 This target also runs through `make check`.
 
-See [the Actions validation instructions](docs/ci/actions.md).
+See [the JSON check instructions](docs/ci/json.md).
 
 ### Prose
 
 Run `make lint-prose` to review English prose in `README.md` and `docs/`.
 
 See [the prose check instructions](docs/ci/prose.md).
+
+### Actions
+
+Run `make validate-actions` to validate GitHub workflow definitions.
+This target also runs through `make check`.
+
+See [the Actions validation instructions](docs/ci/actions.md).
 
 ### CI
 
