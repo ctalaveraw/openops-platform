@@ -33,3 +33,17 @@ For the CI wrappers, run:
 
 ```sh
 .venv/bin/python -m ruff format --no-cache scripts/ci
+```
+
+Then rerun `make lint-python`.
+
+## Exit status
+
+| Status | Meaning |
+| --- | --- |
+| `0` | Both Ruff checks passed. |
+| `1` | Lint or formatting findings need attention. |
+| `2` | Setup failed or a tool could not complete the check. |
+
+These are the wrapper's exit codes. GNU Make reports a failed recipe with its own
+nonzero exit status.
