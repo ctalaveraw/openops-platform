@@ -8,7 +8,7 @@
 SHELL := /bin/sh
 
 # Define tasks, .PHONY is used to not collide with files that match task names
-.PHONY: help bootstrap setup doctor-python check lint lint-markdown lint-yaml lint-python lint-shell lint-json lint-toml lint-prose validate-actions
+.PHONY: help bootstrap setup doctor-python check lint lint-markdown lint-yaml lint-python lint-shell lint-json lint-toml lint-make lint-prose validate-actions
 
 help:
 	@echo "setup			Install locked Python tooling"
@@ -20,6 +20,7 @@ help:
 	@echo "lint-json		Check JSON and notification examples"
 	@echo "lint-toml		Check TOML and the uv lockfile"
 	@echo "lint-shell		Check repository shell scripts"
+	@echo "lint-make		Check Makefile source and interfaces"
 	@echo "lint-prose		Check documentation prose"
 	@echo "validate-actions	Check GitHub Actions workflows"
 	@echo "check			Run required checks"
@@ -41,7 +42,7 @@ doctor-python:
 check: lint validate-actions
 
 # "lint" runs the required source checks
-lint: lint-markdown lint-yaml lint-python lint-shell lint-json lint-toml
+lint: lint-markdown lint-yaml lint-python lint-shell lint-json lint-toml lint-make
 
 # "lint-markdown" requires "doctor-python", then runs markdown check
 lint-markdown: doctor-python
@@ -66,6 +67,10 @@ lint-json: doctor-python
 # "lint-toml" parses TOML source and the root uv lockfile
 lint-toml: doctor-python
 	@.venv/bin/python scripts/ci/check_toml.py
+
+# "lint-make" reads Makefile source without running component targets
+lint-make: doctor-python
+	@.venv/bin/python scripts/ci/check_make.py
 
 # "lint-prose" requires "doctor-python", then runs document prose check
 lint-prose: doctor-python

@@ -75,6 +75,13 @@ This target also runs through `make check`.
 
 See [the TOML check instructions](docs/ci/toml.md).
 
+### Makefiles
+
+Run `make lint-make` to check Makefile source and the public command interface.
+This target also runs through `make check`.
+
+See [the Makefile check instructions](docs/ci/make.md).
+
 ### Prose
 
 Run `make lint-prose` to review English prose in `README.md` and `docs/`.
