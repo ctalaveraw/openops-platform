@@ -16,9 +16,7 @@ from scripts import verify
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "fixtures"
-PROM_LINE = re.compile(
-    r'openops_fixture_ready\{id="([^"]+)",status="([^"]+)"\} ([01])'
-)
+PROM_LINE = re.compile(r'openops_fixture_ready\{id="([^"]+)",status="([^"]+)"\} ([01])')
 
 
 class FormatSpecimens(unittest.TestCase):
@@ -37,9 +35,7 @@ class FormatSpecimens(unittest.TestCase):
         connection = sqlite3.connect(":memory:")
         try:
             with self.assertRaises(sqlite3.OperationalError):
-                connection.executescript(
-                    (FIXTURES / "invalid/bad.sql").read_text()
-                )
+                connection.executescript((FIXTURES / "invalid/bad.sql").read_text())
         finally:
             connection.close()
 
