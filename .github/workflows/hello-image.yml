@@ -27,7 +27,7 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Check out source
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           persist-credentials: false
 
@@ -47,7 +47,7 @@ jobs:
       packages: write
     steps:
       - name: Check out trusted source
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           persist-credentials: false
 
@@ -69,4 +69,4 @@ jobs:
           docker push "$IMAGE_REPO:sha-$SOURCE_SHA"
           digest=$(docker image inspect --format '{{index .RepoDigests 0}}' "$IMAGE_REPO:sha-$SOURCE_SHA")
           test -n "$digest"
-          printf 'Published: \`%s\`\\n' "$digest" >> "$GITHUB_STEP_SUMMARY"
+          printf 'Published image: %s\n' "$digest" >> "$GITHUB_STEP_SUMMARY"

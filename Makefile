@@ -24,6 +24,7 @@ help:
 	@echo "lint-web		Check application HTML and CSS"
 	@echo "lint-prose		Check documentation prose"
 	@echo "validate-actions	Check GitHub Actions workflows"
+	@echo "check-apps\t\tRun independent application checks"
 	@echo "check			Run required checks"
 
 # Prepare the project runtime, then install locked tooling
@@ -40,7 +41,7 @@ setup:
 doctor-python:
 	@uv sync --locked --no-python-downloads --offline --check --quiet
 
-# "check" requires source lint and workflow validation
+# "check" requires platform gates and application checks
 check: lint validate-actions check-apps
 
 # "lint" runs the required source checks
