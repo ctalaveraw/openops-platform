@@ -5,10 +5,18 @@ PYTHON ?= python3
 PORT ?= 8080
 IMAGE ?= openops-hello-world:local
 
-.PHONY: help check lint test run smoke compose-check build up down schema-check
+.PHONY: help check lint test run smoke compose-check build up down schema-check prose-check
 
 help:
-	@printf '%s\n' 'make check         Validate files and run unit tests (offline)' 'make run           Serve public/ locally (development only)' 'make smoke         Check a running server on http://127.0.0.1:8080' 'make compose-check Validate optional Compose file (requires Docker)' 'make build         Build local image (requires Docker)' 'make up/down       Start/stop optional Compose service' 'make schema-check  Run full schema checks (optional Python libraries)'
+	@printf '%s\n' \
+		'make check         Run offline checks and unit tests' \
+		'make run           Serve public/ locally (development only)' \
+		'make smoke         Check a running server on PORT (default: 8080)' \
+		'make compose-check Validate Compose without starting containers' \
+		'make build         Build local image (requires Docker)' \
+		'make up/down       Start or stop optional Compose service' \
+		'make schema-check  Validate schemas (optional Python libraries)' \
+		'make prose-check   Run vendored SlopMonster on docs and banner'
 
 check: lint test
 
@@ -40,3 +48,10 @@ down:
 
 schema-check:
 	@$(PYTHON) scripts/check_schemas.py
+
+# Existing OpenOps tool, optional until the platform enables this application.
+prose-check:
+	@test -f ../../vendor/slopmonster/deslop.py || { echo 'SlopMonster is missing; run from an OpenOps checkout.' >&2; exit 2; }
+	@for path in README.md docs/FILES.md docs/CHECKS.md public/index.html; do \
+		$(PYTHON) ../../vendor/slopmonster/deslop.py "$$path" || exit $$?; \
+	done

@@ -32,7 +32,7 @@ Read this table when a file appears unrelated to a single web page.
 | `tests/` | Verify success and expected failure | Python `unittest` |
 | `Dockerfile`, `.dockerignore` | Optional static image | Future image lint/build/inspection |
 | `compose.yaml` | Optional local container run | `make compose-check` |
-| `Makefile` | Operator entry points | `make help`; `make check` |
+| `Makefile` | Operator entry points | `make help`; `make check`; optional `make prose-check` |
 
 Only `public/` is copied into the image. The other files are exercise material
 and remain outside the served web directory.

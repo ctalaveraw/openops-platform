@@ -45,4 +45,7 @@ with Ctrl+C. The container uses unprivileged NGINX instead.
 - The Python scripts are test and tooling code, not application services.
 - Root CI, root Makefile, registry and platform deployment are unchanged.
 
+Use `make prose-check` in the full OpenOps checkout for the vendored
+SlopMonster review; it is opt-in until the platform adopts this workload.
+
 See [check commands](docs/CHECKS.md) before adding a new format.

@@ -10,14 +10,17 @@ Run these commands from `apps/hello-world/`.
 | `make run` | No | Local HTTP server; runs until Ctrl+C |
 | `make smoke` | Running HTTP server | Banner and `/healthz` over HTTP |
 | `make schema-check` | No | Full JSON Schema, YAML and XSD with optional Python packages |
+| `make prose-check` | No | README, file map, check notes and banner with vendored SlopMonster |
 | `make compose-check` | Docker CLI | Compose file structure; does not start services |
 | `make build` | Docker daemon | OCI image build; manual only |
 | `make up` / `make down` | Docker daemon | Start/stop demo container; manual only |
 
 `make check` requires Python 3.11 or newer for `tomllib`. It makes no network
 requests and does not start the container. The optional schema check requires
-`jsonschema`, `PyYAML`, and `lxml` in the Python environment. Missing packages
-cause a clear error; the default check does not depend on them.
+`jsonschema`, `PyYAML`, and `lxml` in the Python environment. The prose check
+uses the pinned script at `../../vendor/slopmonster/deslop.py` in the full
+OpenOps checkout. Neither optional check runs under `make check`. A missing
+optional tool causes a clear error; the default check does not depend on them.
 
 ## Expected failures
 
