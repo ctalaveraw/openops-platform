@@ -3,7 +3,7 @@
 ## Purpose
 
 Run `make lint-markdown` to check repository Markdown before review.
-The required `make check` gate currently contains only this check.
+The required `make check` gate includes this check.
 
 ## Setup
 
