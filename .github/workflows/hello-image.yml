@@ -1,0 +1,72 @@
+name: Hello World image
+
+"on":
+  pull_request:
+    paths:
+      - apps/hello-world/**
+      - scripts/delivery/check_hello_image.sh
+      - .github/workflows/hello-image.yml
+      - Makefile
+  push:
+    branches:
+      - main
+    paths:
+      - apps/hello-world/**
+      - scripts/delivery/check_hello_image.sh
+      - .github/workflows/hello-image.yml
+      - Makefile
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Build and smoke on PR
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Run standalone application checks
+        run: make -C apps/hello-world check
+
+      - name: Build and smoke-test the image
+        run: sh scripts/delivery/check_hello_image.sh
+
+  publish:
+    name: Test and publish from main
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Check out trusted source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Run standalone application checks
+        run: make -C apps/hello-world check
+
+      - name: Build and smoke-test the image
+        run: sh scripts/delivery/check_hello_image.sh
+
+      - name: Publish the tested image to GHCR
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IMAGE_REPO: ghcr.io/${{ github.repository }}-hello-world
+          SOURCE_SHA: ${{ github.sha }}
+          ACTOR: ${{ github.actor }}
+        run: |
+          printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$ACTOR" --password-stdin
+          docker tag openops-hello-world:ci "$IMAGE_REPO:sha-$SOURCE_SHA"
+          docker push "$IMAGE_REPO:sha-$SOURCE_SHA"
+          digest=$(docker image inspect --format '{{index .RepoDigests 0}}' "$IMAGE_REPO:sha-$SOURCE_SHA")
+          test -n "$digest"
+          printf 'Published: \`%s\`\\n' "$digest" >> "$GITHUB_STEP_SUMMARY"

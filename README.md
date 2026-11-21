@@ -11,6 +11,15 @@ with observability and recovery procedures for deployed services.
 
 **Foundation and architecture planning.** The intended system is documented but must not be assumed to be deployed. Work proceeds in independently testable milestones; implementation and operational claims require evidence from this repository.
 
+## First workload
+
+The [Hello World fixture](apps/hello-world/README.md) is a static test workload.
+Run `make check-apps` to validate it independently or `make check` to validate
+both the platform and the workload. Neither command builds or deploys an image.
+
+See [Hello World delivery](docs/delivery/hello-world.md) for the image smoke test,
+trusted registry publication, and the separate runtime-deployment boundary.
+
 ## Engineering handbook
 
 The [OpenOps Platform Engineering Handbook](https://github.com/ctalaveraw/openops-platform-handbook) maintains the project charter, architecture options, decision register, technical evaluations, and proposed roadmap. Planning is intentionally separated from executable infrastructure and application code.

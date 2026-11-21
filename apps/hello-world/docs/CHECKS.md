@@ -60,9 +60,10 @@ still parses that file and expects a JSON decoding error.
 
 ## What has not been exercised
 
-This directory is not wired into the root Makefile or CI. The Docker and Compose
-commands are optional and require a container engine. There is no registry
-publication, deployment, GitOps manifest, external webhook, or alert.
+Root `make check-apps` delegates to this component's offline `make check`.
+The optional container check runs in a separate CI job, not as part of the
+normal Make check. GitHub publishes a tested image only after a trusted push
+to `main`. There is no cluster rollout, GitOps manifest, webhook, or alert.
 
 When the platform is ready, add one integration at a time and link to a real
 command or test result. Do not mark a check as working because its file exists.
