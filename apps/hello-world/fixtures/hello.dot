@@ -1,0 +1,5 @@
+// Documentation-only graph; dashed arrow means a later step.
+digraph hello {
+  source -> check;
+  check -> image [style=dashed];
+}

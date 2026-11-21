@@ -26,6 +26,15 @@ Read this table when a file appears unrelated to a single web page.
 | `contracts/workload.yaml` | Example platform input | YAML lint; optional schema validation |
 | `contracts/openapi.yaml` | One documented HTTP response | YAML lint; future OpenAPI validator |
 | `l10n/en.po` | Gettext sample; not used by the site | Future `msgfmt --check` |
+| `fixtures/hello.sql`, `invalid/bad.sql` | One SQLite record and a failure case | In-memory SQL execution; no database file |
+| `fixtures/hello.prom`, `invalid/bad.prom` | Sample metrics text and a bad value | Narrow metric format and negative checks; no exporter |
+| `fixtures/hello.http` | Two example HTTP requests | Offline path and port checks; no request sent |
+| `fixtures/hello.rss.xml` | One unpublished feed item | XML parsing and episode parity |
+| `fixtures/hello.env.example` | Harmless configuration sample | Key/value checks; not loaded or sourced |
+| `fixtures/hello.log` | One example log record | Timestamp and field checks; not emitted by the app |
+| `fixtures/hello.dot` | Planned source-to-image diagram | Optional Graphviz syntax check |
+| `.editorconfig`, `.gitattributes` | File editing and line-ending rules | Focused setting checks; scoped to this folder |
+| `tests/test_specimens.py` | Tests for the extra specimens | SQL, metrics, feed, HTTP, log, archive round-trip |
 | `scripts/verify.py` | Local source/fixture checks | Python unit tests and `make lint` |
 | `scripts/check_schemas.py` | Optional full schema check | `make schema-check` |
 | `scripts/smoke.sh` | Check a running HTTP server | `sh -n`; manual `make smoke` |

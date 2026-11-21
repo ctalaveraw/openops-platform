@@ -1,0 +1,3 @@
+# HELP openops_fixture_ready Sample readiness value; not served by the app.
+# TYPE openops_fixture_ready gauge
+openops_fixture_ready{id="001",status="ready"} 1

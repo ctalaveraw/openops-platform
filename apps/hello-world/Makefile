@@ -5,7 +5,7 @@ PYTHON ?= python3
 PORT ?= 8080
 IMAGE ?= openops-hello-world:local
 
-.PHONY: help check lint test run smoke compose-check build up down schema-check prose-check
+.PHONY: help check lint test run smoke compose-check build up down schema-check prose-check diagram-check
 
 help:
 	@printf '%s\n' \
@@ -16,6 +16,7 @@ help:
 		'make build         Build local image (requires Docker)' \
 		'make up/down       Start or stop optional Compose service' \
 		'make schema-check  Validate schemas (optional Python libraries)' \
+		'make diagram-check Validate example DOT graph (optional Graphviz)' \
 		'make prose-check   Run vendored SlopMonster on docs and banner'
 
 check: lint test
@@ -55,3 +56,8 @@ prose-check:
 	@for path in README.md docs/FILES.md docs/CHECKS.md public/index.html; do \
 		$(PYTHON) ../../vendor/slopmonster/deslop.py "$$path" || exit $$?; \
 	done
+
+# Optional graph parser; no generated or tracked artifact.
+diagram-check:
+	@command -v dot >/dev/null 2>&1 || { echo 'Graphviz dot is required.' >&2; exit 2; }
+	@dot -Tsvg fixtures/hello.dot -o /dev/null

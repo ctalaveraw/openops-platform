@@ -42,6 +42,8 @@ with Ctrl+C. The container uses unprivileged NGINX instead.
 - Docker and Compose commands are manual, not part of `make check`.
 - CSV, TSV, XML and other specimens describe the same invented episode.
   Changing one without changing the others is supposed to fail.
+- SQL, metrics, HTTP, RSS, log and config examples are checked offline.
+  None is read by the web page.
 - The Python scripts are test and tooling code, not application services.
 - Root CI, root Makefile, registry and platform deployment are unchanged.
 
