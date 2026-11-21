@@ -12,9 +12,10 @@ from scripts import verify
 class FixtureTests(unittest.TestCase):
     def test_formats_agree(self) -> None:
         verify.verify_formats()
-        self.assertEqual(set(verify.load_episode_formats()), {
-            "json", "csv", "tsv", "xml", "yaml", "toml", "ini", "jsonl", "properties"
-        })
+        self.assertEqual(
+            set(verify.load_episode_formats()),
+            {"json", "csv", "tsv", "xml", "yaml", "toml", "ini", "jsonl", "properties"},
+        )
 
     def test_reject_malformed_json(self) -> None:
         with self.assertRaises(json.JSONDecodeError):
@@ -45,7 +46,9 @@ class FixtureTests(unittest.TestCase):
     def test_reject_changed_record(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "changed.csv"
-            path.write_text("id,title,status\n001,Wrong title,ready\n", encoding="utf-8")
+            path.write_text(
+                "id,title,status\n001,Wrong title,ready\n", encoding="utf-8"
+            )
             self.assertNotEqual(verify.load_delimited(path, ","), verify.EXPECTED)
 
 
@@ -55,10 +58,18 @@ class WebTests(unittest.TestCase):
 
     def test_only_expected_runtime_assets_are_present(self) -> None:
         public = verify.ROOT / "public"
-        self.assertEqual({p.name for p in public.iterdir()}, {
-            "index.html", "style.css", "favicon.svg", "site.webmanifest",
-            "robots.txt", "healthz", "version.txt"
-        })
+        self.assertEqual(
+            {p.name for p in public.iterdir()},
+            {
+                "index.html",
+                "style.css",
+                "favicon.svg",
+                "site.webmanifest",
+                "robots.txt",
+                "healthz",
+                "version.txt",
+            },
+        )
 
     def test_banner_does_not_contain_javascript(self) -> None:
         html = (verify.ROOT / "public/index.html").read_text(encoding="utf-8")

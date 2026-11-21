@@ -158,7 +158,14 @@ def main() -> int:
     try:
         verify_static()
         verify_formats()
-    except (OSError, ValueError, KeyError, TypeError, ET.ParseError, json.JSONDecodeError) as error:
+    except (
+        OSError,
+        ValueError,
+        KeyError,
+        TypeError,
+        ET.ParseError,
+        json.JSONDecodeError,
+    ) as error:
         print(f"FAIL: {error}", file=sys.stderr)
         return 1
     print("PASS: page assets, schemas parsed, nine data formats agree")

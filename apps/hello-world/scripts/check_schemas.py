@@ -14,7 +14,10 @@ def main() -> int:
         import yaml
         from lxml import etree
     except ImportError:
-        print("Requires jsonschema, PyYAML and lxml (optional developer tools).", file=sys.stderr)
+        print(
+            "Requires jsonschema, PyYAML and lxml (optional developer tools).",
+            file=sys.stderr,
+        )
         return 2
 
     for document, schema in (
@@ -22,7 +25,11 @@ def main() -> int:
         ("contracts/workload.yaml", "schemas/workload.schema.json"),
     ):
         content = (ROOT / document).read_text(encoding="utf-8")
-        data = yaml.safe_load(content) if document.endswith(".yaml") else json.loads(content)
+        data = (
+            yaml.safe_load(content)
+            if document.endswith(".yaml")
+            else json.loads(content)
+        )
         contract = json.loads((ROOT / schema).read_text(encoding="utf-8"))
         jsonschema.Draft202012Validator.check_schema(contract)
         jsonschema.validate(data, contract)
