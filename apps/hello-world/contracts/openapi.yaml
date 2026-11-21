@@ -1,0 +1,16 @@
+# Describes the static HTTP health file, not a dynamic application API.
+openapi: 3.1.0
+info:
+  title: Hello World health file
+  version: 0.1.0
+paths:
+  /healthz:
+    get:
+      responses:
+        "200":
+          description: Static health response
+          content:
+            text/plain:
+              schema:
+                type: string
+                const: ok

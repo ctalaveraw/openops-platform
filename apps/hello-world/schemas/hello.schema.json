@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Hello episode fixture",
+  "type": "object",
+  "required": ["episode"],
+  "additionalProperties": false,
+  "properties": {
+    "episode": {
+      "type": "object",
+      "required": ["id", "title", "status"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "pattern": "^[0-9]{3}$"},
+        "title": {"type": "string", "minLength": 1},
+        "status": {"const": "ready"}
+      }
+    }
+  }
+}

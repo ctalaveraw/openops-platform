@@ -1,0 +1,43 @@
+:root {
+  color-scheme: dark;
+  font-family: system-ui, sans-serif;
+  background: #171b30;
+  color: #f5f6ff;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  margin: 0;
+}
+
+.banner {
+  box-sizing: border-box;
+  width: min(90vw, 46rem);
+  padding: 3rem 2rem;
+  text-align: center;
+  border: 1px solid #49516e;
+  border-radius: 1rem;
+  background: #202740;
+}
+
+.episode {
+  color: #f5c66a;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+}
+
+h1 {
+  font-size: clamp(2rem, 6vw, 3.25rem);
+  line-height: 1.2;
+}
+
+.status {
+  margin-top: 2rem;
+  color: #97d7b0;
+  font-family: ui-monospace, monospace;
+  font-size: 0.85rem;
+}

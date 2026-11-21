@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "OpenOps workload fixture",
+  "type": "object",
+  "required": ["name", "kind", "containerPort", "healthPath", "stateful"],
+  "additionalProperties": false,
+  "properties": {
+    "name": {"const": "hello-world"},
+    "kind": {"const": "http"},
+    "containerPort": {"type": "integer", "minimum": 1, "maximum": 65535},
+    "healthPath": {"const": "/healthz"},
+    "stateful": {"const": false}
+  }
+}
