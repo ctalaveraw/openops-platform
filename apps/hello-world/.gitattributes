@@ -5,3 +5,5 @@
 *.sql text eol=lf
 *.prom text eol=lf
 *.http text eol=lf
+public/* text eol=lf
+*.sha256 text eol=lf

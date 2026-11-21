@@ -33,6 +33,7 @@ with Ctrl+C. The container uses unprivileged NGINX instead.
 | See what's tested | `tests/`, `docs/CHECKS.md` |
 | Find out why a file exists | `docs/FILES.md` |
 | Run a check | `Makefile` |
+| Have a parent Makefile call this fixture | `docs/MAKE-CONTRACT.md` |
 | Try a container later | `Dockerfile`, `compose.yaml` |
 
 ## Rules
@@ -45,9 +46,11 @@ with Ctrl+C. The container uses unprivileged NGINX instead.
 - SQL, metrics, HTTP, RSS, log and config examples are checked offline.
   None is read by the web page.
 - The Python scripts are test and tooling code, not application services.
+- The component declaration and checksum sample are tested without Docker.
 - Root CI, root Makefile, registry and platform deployment are unchanged.
 
 Use `make prose-check` in the full OpenOps checkout for the vendored
 SlopMonster review; it is opt-in until the platform adopts this workload.
 
 See [check commands](docs/CHECKS.md) before adding a new format.
+[Component delegation](docs/MAKE-CONTRACT.md) explains future parent calls.

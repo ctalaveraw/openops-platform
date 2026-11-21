@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "name": "hello-world",
+  "kind": "fixture",
+  "versionFile": "VERSION",
+  "makeTargets": {
+    "help": "help",
+    "check": "check",
+    "lint": "lint",
+    "test": "test"
+  },
+  "runtime": {
+    "directory": "public",
+    "port": 8080,
+    "healthPath": "/healthz"
+  }
+}

@@ -20,6 +20,10 @@ Read this table when a file appears unrelated to a single web page.
 | `fixtures/hello.jsonl` | Line-delimited JSON | Python JSON decoding and parity |
 | `fixtures/hello.properties` | Key/value specimen | Python parity and duplicate-key check |
 | `fixtures/invalid/` | Deliberately broken inputs | Negative tests; not generic lint inputs |
+| `fixtures/public.sha256` | Source checksums for the seven served files | Python SHA-256 parity; later artifact integrity |
+| `contracts/component.json` | Example child-Make interface | Python target checks; optional JSON Schema |
+| `schemas/component.schema.json` | Interface shape | Optional JSON Schema check |
+| `docs/MAKE-CONTRACT.md` | Parent/child Make instructions | Example only; no root wiring |
 | `schemas/hello.schema.json` | JSON data contract | JSON Schema validator (optional extra check) |
 | `schemas/hello.xsd` | XML contract | XSD validator (optional extra check) |
 | `schemas/workload.schema.json` | Workload contract | JSON Schema validator (optional extra check) |
@@ -38,7 +42,7 @@ Read this table when a file appears unrelated to a single web page.
 | `scripts/verify.py` | Local source/fixture checks | Python unit tests and `make lint` |
 | `scripts/check_schemas.py` | Optional full schema check | `make schema-check` |
 | `scripts/smoke.sh` | Check a running HTTP server | `sh -n`; manual `make smoke` |
-| `tests/` | Verify success and expected failure | Python `unittest` |
+| `tests/` | Verify success and expected failure | Python `unittest`, including Make preview |
 | `Dockerfile`, `.dockerignore` | Optional static image | Future image lint/build/inspection |
 | `compose.yaml` | Optional local container run | `make compose-check` |
 | `Makefile` | Operator entry points | `make help`; `make check`; optional `make prose-check` |

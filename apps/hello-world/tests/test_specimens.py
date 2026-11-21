@@ -111,6 +111,7 @@ class FormatSpecimens(unittest.TestCase):
         attributes = (ROOT / ".gitattributes").read_text()
         self.assertIn("*.sql text eol=lf", attributes)
         self.assertIn("*.xml text eol=lf", attributes)
+        self.assertIn("public/* text eol=lf", attributes)
 
     def test_documented_graph(self) -> None:
         graph = (FIXTURES / "hello.dot").read_text()

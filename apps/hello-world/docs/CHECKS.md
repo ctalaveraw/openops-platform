@@ -4,7 +4,7 @@ Run these commands from `apps/hello-world/`.
 
 | Command | Does it need a container? | What it checks |
 | --- | --- | --- |
-| `make check` | No | Python syntax, shell syntax, fixture parity, negative tests, page assets |
+| `make check` | No | Python/shell syntax, fixture parity, Make target preview, source checksums, negative tests |
 | `make test` | No | Python unit tests only |
 | `make lint` | No | Script syntax and source/fixture validation |
 | `make run` | No | Local HTTP server; runs until Ctrl+C |
@@ -23,6 +23,9 @@ uses the pinned script at `../../vendor/slopmonster/deslop.py` in the full
 OpenOps checkout. Neither optional check runs under `make check`. A missing
 optional tool causes a clear error; the default check does not depend on them.
 
+The component tests use `make -n` to preview child targets without running
+them. They check that the component metadata matches the existing workload
+contract. They also compare committed SHA-256 sums with the served files.
 The extra fixture tests parse SQL in an in-memory SQLite database and inspect a
 Prometheus text sample, HTTP request examples, an RSS item, a sample environment
 file and one log line. They also check line-ending rules and archive round trips.
@@ -41,6 +44,13 @@ and runs no image build or deployment.
 - Change the metric value to a word: the metrics test fails.
 - Break the SQL table name: the SQLite test fails.
 - Stop the server, then run `make smoke`: the shell command fails.
+- Edit `public/style.css`: the SHA-256 check fails until the manifest is updated.
+
+After an intended change to a served file, regenerate its committed digest from
+this directory with `sha256sum public/* > fixtures/public.sha256` (GNU coreutils).
+Review the diff; do not accept unrelated content changes. This catches accidental
+source changes, not malicious edits to both files. The local `.gitattributes`
+keeps served text files at LF line endings on different operating systems.
 
 Restore the fixture after each experiment. Broken inputs in
 `fixtures/invalid/` are intentional; tests check that they are rejected.
@@ -53,3 +63,6 @@ publication, deployment, GitOps manifest, external webhook, or alert.
 
 When the platform is ready, add one integration at a time and link to a real
 command or test result. Do not mark a check as working because its file exists.
+
+[Parent/child Make contract](MAKE-CONTRACT.md) explains how the platform may
+invoke this component later without importing its code.

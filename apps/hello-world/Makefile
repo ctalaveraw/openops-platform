@@ -53,7 +53,7 @@ schema-check:
 # Existing OpenOps tool, optional until the platform enables this application.
 prose-check:
 	@test -f ../../vendor/slopmonster/deslop.py || { echo 'SlopMonster is missing; run from an OpenOps checkout.' >&2; exit 2; }
-	@for path in README.md docs/FILES.md docs/CHECKS.md public/index.html; do \
+	@for path in README.md docs/FILES.md docs/CHECKS.md docs/MAKE-CONTRACT.md public/index.html; do \
 		$(PYTHON) ../../vendor/slopmonster/deslop.py "$$path" || exit $$?; \
 	done
 
