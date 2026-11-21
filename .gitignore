@@ -3,3 +3,6 @@
 /build/
 /site/
 __pycache__/
+
+# Local JavaScript tooling
+node_modules/

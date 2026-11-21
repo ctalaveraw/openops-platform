@@ -36,7 +36,9 @@ The initial candidate workload is a browser-rendered static application. A Forge
 
 Use Git, GNU Make, and uv 0.13.9.
 Run `make bootstrap`, then `make check`.
-Bootstrap installs Python 3.12 in uv's managed storage and the locked tools in `.venv`.
+Bootstrap installs Python 3.12 in uv's managed storage.
+Python tooling and Node/npm live in `.venv`.
+JavaScript linters live in ignored `node_modules/`.
 
 See [the Markdown check instructions](docs/ci/markdown.md).
 
@@ -81,6 +83,13 @@ Run `make lint-make` to check Makefile source and the public command interface.
 This target also runs through `make check`.
 
 See [the Makefile check instructions](docs/ci/make.md).
+
+### HTML and CSS
+
+Run `make lint-web` to check application HTML and CSS.
+This target also runs through `make check`.
+
+See [the web check instructions](docs/ci/web.md).
 
 ### Prose
 
