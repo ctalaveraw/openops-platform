@@ -36,7 +36,9 @@ The initial candidate workload is a browser-rendered static application. A Forge
 
 Use Git, GNU Make, and uv 0.13.9.
 Run `make bootstrap`, then `make check`.
-Bootstrap installs Python 3.12 in uv's managed storage and the locked tools in `.venv`.
+Bootstrap installs Python 3.12 in uv's managed storage.
+Python tooling and Node/npm live in `.venv`.
+JavaScript linters live in ignored `node_modules/`.
 
 See [the Markdown check instructions](docs/ci/markdown.md).
 
@@ -54,11 +56,53 @@ This check also runs through `make check`.
 
 See [the Python check instructions](docs/ci/python.md).
 
+### Shell
+
+Run `make lint-shell` to check repository shell scripts.
+This target also runs through `make check`.
+
+See [the shell check instructions](docs/ci/shell.md).
+
+### JSON
+
+Run `make lint-json` to parse repository JSON and validate notification examples.
+This target also runs through `make check`.
+
+See [the JSON check instructions](docs/ci/json.md).
+
+### TOML
+
+Run `make lint-toml` to parse repository TOML, including `uv.lock`.
+This target also runs through `make check`.
+
+See [the TOML check instructions](docs/ci/toml.md).
+
+### Makefiles
+
+Run `make lint-make` to check Makefile source and the public command interface.
+This target also runs through `make check`.
+
+See [the Makefile check instructions](docs/ci/make.md).
+
+### HTML and CSS
+
+Run `make lint-web` to check application HTML and CSS.
+This target also runs through `make check`.
+
+See [the web check instructions](docs/ci/web.md).
+
 ### Prose
 
 Run `make lint-prose` to review English prose in `README.md` and `docs/`.
 
 See [the prose check instructions](docs/ci/prose.md).
+
+### Actions
+
+Run `make validate-actions` to validate GitHub workflow definitions.
+This target also runs through `make check`.
+
+See [the Actions validation instructions](docs/ci/actions.md).
 
 ### CI
 

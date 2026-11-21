@@ -19,7 +19,7 @@ Read this table when a file appears unrelated to a single web page.
 | `fixtures/hello.ini` | INI specimen | Python `configparser` and parity |
 | `fixtures/hello.jsonl` | Line-delimited JSON | Python JSON decoding and parity |
 | `fixtures/hello.properties` | Key/value specimen | Python parity and duplicate-key check |
-| `fixtures/invalid/` | Deliberately broken inputs | Negative tests; not generic lint inputs |
+| `fixtures/invalid/` | Deliberately broken inputs (`bad.json.txt` is malformed JSON) | Explicit negative tests; invalid JSON keeps a `.txt` suffix so repository-wide JSON lint can parse all `.json` files |
 | `fixtures/public.sha256` | Source checksums for the seven served files | Python SHA-256 parity; later artifact integrity |
 | `contracts/component.json` | Example child-Make interface | Python target checks; optional JSON Schema |
 | `schemas/component.schema.json` | Interface shape | Optional JSON Schema check |

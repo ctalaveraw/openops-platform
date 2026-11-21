@@ -33,6 +33,6 @@ SlopMonster uses English pattern matching. A score of 5/5 means no scored
 patterns matched. It does not establish factual accuracy or authorship.
 Review findings for context and keep the intended meaning when editing.
 
-This target is optional during evaluation.
-`make check` requires the Markdown and YAML checks.
-Python linting and formatting are also required.
+This target is optional.
+Run `make check` for the required gate.
+See [the required check instructions](checks.md).

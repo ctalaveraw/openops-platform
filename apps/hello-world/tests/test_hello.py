@@ -19,7 +19,7 @@ class FixtureTests(unittest.TestCase):
 
     def test_reject_malformed_json(self) -> None:
         with self.assertRaises(json.JSONDecodeError):
-            json.loads((verify.ROOT / "fixtures/invalid/bad.json").read_text())
+            json.loads((verify.ROOT / "fixtures/invalid/bad.json.txt").read_text())
 
     def test_reject_malformed_xml(self) -> None:
         with self.assertRaises(ET.ParseError):

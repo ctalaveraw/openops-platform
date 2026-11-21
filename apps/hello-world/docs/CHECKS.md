@@ -54,6 +54,9 @@ keeps served text files at LF line endings on different operating systems.
 
 Restore the fixture after each experiment. Broken inputs in
 `fixtures/invalid/` are intentional; tests check that they are rejected.
+The malformed JSON is named `bad.json.txt` because the platform-wide JSON
+linter checks all `.json` files, including negative examples. The fixture test
+still parses that file and expects a JSON decoding error.
 
 ## What has not been exercised
 
