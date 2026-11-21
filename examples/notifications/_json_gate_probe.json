@@ -1,0 +1,16 @@
+{
+  "schema_version": 2,
+  "source": "ci",
+  "provider": "github",
+  "event": "validation_failed",
+  "repository": "example/openops-platform",
+  "workflow": "Repository checks",
+  "revision": "0123456789abcdef0123456789abcdef01234567",
+  "severity": "warning",
+  "idempotency_key": "github:repository-checks:123:1:failure",
+  "evidence_url": "https://github.com/example/openops-platform/actions/runs/123",
+  "destination": {
+    "channel": "development-events",
+    "topic": "CI / Repository checks"
+  }
+}
