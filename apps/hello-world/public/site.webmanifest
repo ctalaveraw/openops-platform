@@ -1,0 +1,11 @@
+{
+  "name": "OpenOps Hello World",
+  "short_name": "OpenOps Hello",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#171b30",
+  "background_color": "#171b30",
+  "icons": [
+    {"src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml"}
+  ]
+}

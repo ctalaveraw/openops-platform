@@ -1,0 +1,5 @@
+# Local requests for an optional running server. Not run by make check.
+GET http://127.0.0.1:8080/healthz HTTP/1.1
+
+###
+GET http://127.0.0.1:8080/version.txt HTTP/1.1

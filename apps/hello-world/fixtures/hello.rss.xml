@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>OpenOps Fixture</title>
+    <link>https://example.invalid/</link>
+    <description>Local RSS validation specimen; not published.</description>
+    <item>
+      <title>Hello, Ops World!</title>
+      <guid isPermaLink="false">001</guid>
+      <description>ready</description>
+    </item>
+  </channel>
+</rss>

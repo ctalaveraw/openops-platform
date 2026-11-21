@@ -1,0 +1,13 @@
+.git/
+docs/
+fixtures/
+schemas/
+contracts/
+l10n/
+scripts/
+tests/
+__pycache__/
+*.md
+Makefile
+compose.yaml
+VERSION

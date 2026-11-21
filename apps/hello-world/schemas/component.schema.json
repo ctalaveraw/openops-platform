@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Example component-to-Make interface",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "name",
+    "kind",
+    "versionFile",
+    "makeTargets",
+    "runtime"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "kind": {
+      "const": "fixture"
+    },
+    "versionFile": {
+      "const": "VERSION"
+    },
+    "makeTargets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "help",
+        "check",
+        "lint",
+        "test"
+      ],
+      "properties": {
+        "help": {
+          "const": "help"
+        },
+        "check": {
+          "const": "check"
+        },
+        "lint": {
+          "const": "lint"
+        },
+        "test": {
+          "const": "test"
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "directory",
+        "port",
+        "healthPath"
+      ],
+      "properties": {
+        "directory": {
+          "const": "public"
+        },
+        "port": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535
+        },
+        "healthPath": {
+          "type": "string",
+          "pattern": "^/"
+        }
+      }
+    }
+  }
+}

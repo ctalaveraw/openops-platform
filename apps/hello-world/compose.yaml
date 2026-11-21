@@ -1,0 +1,7 @@
+# Manual local exercise only. No platform integration.
+services:
+  hello-world:
+    build: .
+    image: openops-hello-world:local
+    ports:
+      - "127.0.0.1:8080:8080"

@@ -1,0 +1,6 @@
+# Proposed input contract, not a deployed platform resource.
+name: hello-world
+kind: http
+containerPort: 8080
+healthPath: /healthz
+stateful: false

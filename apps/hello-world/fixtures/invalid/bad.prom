@@ -1,0 +1,2 @@
+# Invalid fixture: metric value cannot be plain text.
+openops_fixture_ready{id="001",status="ready"} bananas
