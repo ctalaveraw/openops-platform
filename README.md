@@ -61,6 +61,13 @@ This target also runs through `make check`.
 
 See [the shell check instructions](docs/ci/shell.md).
 
+### Actions
+
+Run `make validate-actions` to validate GitHub workflow definitions.
+This target also runs through `make check`.
+
+See [the Actions validation instructions](docs/ci/actions.md).
+
 ### Prose
 
 Run `make lint-prose` to review English prose in `README.md` and `docs/`.
