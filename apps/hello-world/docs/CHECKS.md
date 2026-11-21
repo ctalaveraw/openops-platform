@@ -7,21 +7,21 @@ Run these commands from `apps/hello-world/`.
 | `make check` | No | Python/shell syntax, fixture parity, Make target preview, source checksums, negative tests |
 | `make test` | No | Python unit tests only |
 | `make lint` | No | Script syntax and source/fixture validation |
-| `make run` | No | Local HTTP server; runs until Ctrl+C |
+| `make run` | No | Local HTTP server, runs until Ctrl+C |
 | `make smoke` | Running HTTP server | Banner, CSS, `/healthz` and expected 404 |
 | `make schema-check` | No | Full JSON Schema, YAML and XSD with optional Python packages |
 | `make prose-check` | No | README, file map, check notes and banner with vendored SlopMonster |
-| `make diagram-check` | Graphviz (optional) | Parse sample DOT graph; does not deploy or generate tracked files |
-| `make compose-check` | Docker CLI | Compose file structure; does not start services |
-| `make build` | Docker daemon | OCI image build; manual only |
-| `make up` / `make down` | Docker daemon | Start/stop demo container; manual only |
+| `make diagram-check` | Graphviz (optional) | Parse sample DOT graph, does not deploy or generate tracked files |
+| `make compose-check` | Docker CLI | Compose file structure, does not start services |
+| `make build` | Docker daemon | OCI image build, manual only |
+| `make up` / `make down` | Docker daemon | Start/stop demo container, manual only |
 
 `make check` requires Python 3.11 or newer for `tomllib`. It makes no network
 requests and does not start the container. The optional schema check requires
 `jsonschema`, `PyYAML`, and `lxml` in the Python environment. The prose check
 uses the pinned script at `../../vendor/slopmonster/deslop.py` in the full
 OpenOps checkout. Neither optional check runs under `make check`. A missing
-optional tool causes a clear error; the default check does not depend on them.
+optional tool causes a clear error, the default check does not depend on them.
 
 The component tests use `make -n` to preview child targets without running
 them. They check that the component metadata matches the existing workload
@@ -48,12 +48,12 @@ and runs no image build or deployment.
 
 After an intended change to a served file, regenerate its committed digest from
 this directory with `sha256sum public/* > fixtures/public.sha256` (GNU coreutils).
-Review the diff; do not accept unrelated content changes. This catches accidental
+Review the diff, do not accept unrelated content changes. This catches accidental
 source changes, not malicious edits to both files. The local `.gitattributes`
 keeps served text files at LF line endings on different operating systems.
 
 Restore the fixture after each experiment. Broken inputs in
-`fixtures/invalid/` are intentional; tests check that they are rejected.
+`fixtures/invalid/` are intentional, tests check that they are rejected.
 The malformed JSON is named `bad.json.txt` because the platform-wide JSON
 linter checks all `.json` files, including negative examples. The fixture test
 still parses that file and expects a JSON decoding error.
