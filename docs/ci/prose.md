@@ -34,4 +34,5 @@ patterns matched. It does not establish factual accuracy or authorship.
 Review findings for context and keep the intended meaning when editing.
 
 This target is optional during evaluation.
-`make check` requires the Markdown and YAML checks.
+`make check` requires the Markdown and YAML checks.i
+Python linting and formatting are also required.
