@@ -11,6 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 VENDOR = ROOT / "vendor" / "slopmonster"
 
+
 # Verify imported vendor files from upstream
 def verify_vendor() -> None:
     manifest = json.loads((VENDOR / "UPSTREAM.json").read_text(encoding="utf-8"))
@@ -18,6 +19,7 @@ def verify_vendor() -> None:
         actual = hashlib.sha256((VENDOR / name).read_bytes()).hexdigest()
         if actual != manifest["sha256"][name]:
             raise ValueError(f"vendored {name} does not match UPSTREAM.json")
+
 
 # Selects documentation for prose check and fails if missing
 def markdown_inputs() -> list[Path]:
@@ -28,8 +30,15 @@ def markdown_inputs() -> list[Path]:
 
     listed = subprocess.run(
         [
-            "git", "ls-files", "--cached", "--others", "--exclude-standard",
-            "-z", "--", "README.md", "docs/",
+            "git",
+            "ls-files",
+            "--cached",
+            "--others",
+            "--exclude-standard",
+            "-z",
+            "--",
+            "README.md",
+            "docs/",
         ],
         cwd=ROOT,
         stdout=subprocess.PIPE,
@@ -44,7 +53,9 @@ def markdown_inputs() -> list[Path]:
 # Executing function
 def main() -> int:
     if len(sys.argv) != 1:
-        print("ERROR lint-prose: this command accepts no path arguments.", file=sys.stderr)
+        print(
+            "ERROR lint-prose: this command accepts no path arguments.", file=sys.stderr
+        )
         return 2
 
     try:
@@ -63,7 +74,13 @@ def main() -> int:
             )
             if result.returncode != 0:
                 failures += 1
-    except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
+    except (
+        OSError,
+        ValueError,
+        KeyError,
+        TypeError,
+        subprocess.CalledProcessError,
+    ) as error:
         print(f"ERROR lint-prose: {error}", file=sys.stderr)
         return 2
 
@@ -73,6 +90,7 @@ def main() -> int:
 
     print(f"PASS lint-prose: {len(paths)} file(s) checked.", flush=True)
     return 0
+
 
 if __name__ == "__main__":
     raise SystemExit(main())

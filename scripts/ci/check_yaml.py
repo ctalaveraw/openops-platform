@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[2]
 # Always load the configuration belonging to this checkout.
 CONFIG = ROOT / ".yamllint.yaml"
 
+
 def yaml_inputs() -> list[Path]:
     listed = subprocess.run(
         ["git", "ls-files", "--cached", "--others", "--exclude-standard", "-z"],
@@ -35,7 +36,9 @@ def yaml_inputs() -> list[Path]:
 
 def main() -> int:
     if len(sys.argv) != 1:
-        print("ERROR lint-yaml: this command accepts no path arguments.", file=sys.stderr)
+        print(
+            "ERROR lint-yaml: this command accepts no path arguments.", file=sys.stderr
+        )
         return 2
 
     if find_spec("yamllint") is None:
@@ -52,9 +55,14 @@ def main() -> int:
         print(f"RUN lint-yaml: {len(paths)} file(s)", flush=True)
         result = subprocess.run(
             [
-                sys.executable, "-m", "yamllint",
-                "--strict", "--format", "standard",
-                "--config-file", str(CONFIG),
+                sys.executable,
+                "-m",
+                "yamllint",
+                "--strict",
+                "--format",
+                "standard",
+                "--config-file",
+                str(CONFIG),
                 "--",
                 *(str(path) for path in paths),
             ],

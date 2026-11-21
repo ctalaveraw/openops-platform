@@ -47,6 +47,13 @@ This check also runs through `make check`.
 
 See [the YAML check instructions](docs/ci/yaml.md).
 
+### Python
+
+Run `make lint-python` to check Python lint and formatting.
+This check also runs through `make check`.
+
+See [the Python check instructions](docs/ci/python.md).
+
 ### Prose
 
 Run `make lint-prose` to review English prose in `README.md` and `docs/`.

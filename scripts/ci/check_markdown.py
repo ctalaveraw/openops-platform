@@ -9,6 +9,7 @@ from pathlib import Path
 # resolve this script as a system path, relative to current repo layout ## REFACTOR FOR BETTER PATHING
 ROOT = Path(__file__).resolve().parents[2]
 
+
 def main() -> int:
 
     # check if interpreter can find PyMarkdown, exit code 2 if not found
@@ -20,8 +21,8 @@ def main() -> int:
         return 2
 
     print("RUN lint-markdown: repository Markdown (Git ignores applied)", flush=True)
-    
-    # construct the PyMarkdown command  
+
+    # construct the PyMarkdown command
     result = subprocess.run(
         [
             sys.executable,
@@ -61,7 +62,7 @@ def main() -> int:
         )
     return result.returncode
 
+
 # returns integer from PyMarkdown becomes exit code of script
 if __name__ == "__main__":
     raise SystemExit(main())
-

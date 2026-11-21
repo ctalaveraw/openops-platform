@@ -35,3 +35,4 @@ Review findings for context and keep the intended meaning when editing.
 
 This target is optional during evaluation.
 `make check` requires the Markdown and YAML checks.
+Python linting and formatting are also required.

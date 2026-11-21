@@ -7,6 +7,7 @@ dependencies = []
 [dependency-groups]
 dev = [
     "pymarkdownlnt==0.9.42",
+    "ruff==0.17.6",
     "yamllint==1.38.0",
 ]
 
@@ -14,3 +15,15 @@ dev = [
 # This repository uses Python tooling without itself being an installable Python app
 package = false
 required-version = "==0.13.9"
+
+[tool.ruff]
+# Match the Python version supported by this repository.
+target-version = "py312"
+# Use an 88-character preferred width when formatting code.
+line-length = 88
+# Exclude pinned upstream source during directory discovery.
+extend-exclude = ["vendor"]
+
+[tool.ruff.lint]
+# Start with basic error checks and Pyflakes checks such as undefined names.
+select = ["E4", "E7", "E9", "F"]
