@@ -161,7 +161,7 @@ def read_event(path: Path) -> Event:
         if len(content) > MAX_INPUT_BYTES:
             raise InputError("Event file exceeds 16 KiB")
         data = json.loads(content.decode("utf-8"), object_pairs_hook=unique_fields)
-    except (OSError, UnicodeError, ValueError):
+    except (OSError, UnicodeError, ValueError, RecursionError):
         # Do not echo raw input: an invalid file might contain private material.
         raise InputError("Could not read a UTF-8 JSON event file") from None
     return parse_event(data)
@@ -249,17 +249,24 @@ def retry_delay(error: urllib.error.HTTPError, attempt: int) -> float:
     delay = error.headers.get("Retry-After") if error.headers is not None else None
     if delay is None:
         try:
-            response = json.loads(error.read(MAX_RESPONSE_BYTES))
+            content = error.read(MAX_RESPONSE_BYTES + 1)
+            if len(content) > MAX_RESPONSE_BYTES:
+                raise DeliveryError("Rate-limit response exceeds 64 KiB; try later")
+            response = json.loads(content, object_pairs_hook=unique_fields)
             if isinstance(response, dict):
                 delay = response.get("retry-after")
         except (ValueError, UnicodeError):
             pass
+        except (InputError, RecursionError):
+            raise DeliveryError("Invalid rate-limit response; try later") from None
         except (OSError, http.client.HTTPException):
             raise DeliveryError(
                 "Could not read the rate-limit response; try later"
             ) from None
     if delay is None:
         return float(2 ** (attempt - 1))
+    if isinstance(delay, bool):
+        raise DeliveryError("Rate-limit delay must be numeric; try later")
     try:
         seconds = float(delay)
     except (TypeError, ValueError):
@@ -304,8 +311,8 @@ def send_message(
                         "Inspect chat before retrying."
                     )
             try:
-                result = json.loads(content)
-            except (ValueError, UnicodeError):
+                result = json.loads(content, object_pairs_hook=unique_fields)
+            except (ValueError, UnicodeError, InputError, RecursionError):
                 raise DeliveryError(
                     "Invalid response; delivery is unconfirmed. "
                     "Inspect chat before retrying."

@@ -1,6 +1,7 @@
 """Exercise the notifier offline; credentials and HTTP responses are synthetic."""
 
 import base64
+import http.client
 import io
 import json
 import ssl
@@ -62,6 +63,52 @@ def http_error(code, retry_after=None, body=b"{}"):
 
 
 class EventTests(unittest.TestCase):
+    def test_deeply_nested_input_returns_a_safe_cli_error(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "event.json"
+            path.write_bytes(
+                b'{"private-value":' + b"[" * 2500 + b"0" + b"]" * 2500 + b"}"
+            )
+            output, errors = io.StringIO(), io.StringIO()
+            with redirect_stdout(output), redirect_stderr(errors):
+                self.assertEqual(notify.main(["--event", str(path)]), 2)
+            self.assertEqual(output.getvalue(), "")
+            self.assertNotIn("private-value", errors.getvalue())
+            self.assertIn("Invalid input:", errors.getvalue())
+
+    def test_nested_duplicate_destination_fields_are_rejected(self):
+        content = json.dumps(fixture()).replace(
+            '"channel": "development-events"',
+            '"channel": "private-value", "channel": "development-events"',
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "event.json"
+            path.write_text(content)
+            with self.assertRaises(notify.InputError) as caught:
+                notify.read_event(path)
+            self.assertNotIn("private-value", str(caught.exception))
+
+    def test_all_untrusted_message_labels_remain_in_code_spans(self):
+        data = fixture()
+        data.update(
+            repository="@**all**",
+            workflow="``example`` [click](https://elsewhere.invalid)",
+            idempotency_key="event`@**all**",
+            event="validation_recovered",
+            severity="info",
+            recovery_of="failure``@**all**",
+        )
+        payload = notify.message_payload(notify.parse_event(data))
+        self.assertEqual(
+            payload["content"],
+            ":check: **CI recovered** · "
+            "``` ``example`` [click](https://elsewhere.invalid) ```\n"
+            "`@**all**` · revision `0123456789ab` · "
+            "[View run](https://github.com/example/openops-platform/actions/runs/123)\n"
+            "Event `` event`@**all** ``\n"
+            "Recovers ``` failure``@**all** ```",
+        )
+
     def test_both_producers_normalize_to_the_same_message_fields(self):
         github = notify.parse_event(fixture())
         forgejo = notify.read_event(
@@ -257,6 +304,95 @@ class DeliveryTests(unittest.TestCase):
         self.config = notify.BotConfig(
             "https://chat.example.invalid", "ci@example.invalid", "test-only-%key"
         )
+
+    def test_ambiguous_or_nested_acknowledgements_are_not_retried(self):
+        for body in (
+            b'{"result":"success","id":41,"id":42}',
+            b'{"result":"error","result":"success","id":42}',
+            b'{"result":"success","id":42,"extra":'
+            + b"[" * 20000
+            + b"0"
+            + b"]" * 20000
+            + b"}",
+        ):
+            response = Response(body)
+            opener, sleep = FakeOpener(response), Mock()
+            with (
+                self.subTest(body_size=len(body)),
+                self.assertRaises(notify.DeliveryError),
+            ):
+                notify.send_message(self.event, self.config, opener=opener, sleep=sleep)
+            self.assertEqual(len(opener.calls), 1)
+            self.assertTrue(response.closed)
+            sleep.assert_not_called()
+
+    def test_timeout_or_incomplete_ack_read_does_not_resend(self):
+        for error in (
+            TimeoutError("private-value"),
+            http.client.IncompleteRead(b"private-value"),
+        ):
+            response = Response()
+            response.read = Mock(side_effect=error)
+            opener, sleep = FakeOpener(response), Mock()
+            with (
+                self.subTest(error=type(error).__name__),
+                self.assertRaises(notify.DeliveryError) as caught,
+            ):
+                notify.send_message(self.event, self.config, opener=opener, sleep=sleep)
+            self.assertNotIn("private-value", str(caught.exception))
+            self.assertEqual(len(opener.calls), 1)
+            self.assertTrue(response.closed)
+            sleep.assert_not_called()
+
+    def test_retries_preserve_payload_and_stop_on_acknowledgement(self):
+        opener = FakeOpener(http_error(429, "0"), http_error(429, "0"), Response())
+        sleep = Mock()
+        self.assertEqual(
+            notify.send_message(self.event, self.config, opener=opener, sleep=sleep), 42
+        )
+        self.assertEqual(len(opener.calls), 3)
+        self.assertEqual([call.args[0] for call in sleep.call_args_list], [0, 0])
+        self.assertEqual(len({request.data for request, _ in opener.calls}), 1)
+        self.assertEqual([timeout for _, timeout in opener.calls], [10, 10, 10])
+
+    def test_rate_limit_then_timeout_leaves_delivery_unconfirmed(self):
+        opener = FakeOpener(http_error(429), TimeoutError("private-value"))
+        sleep = Mock()
+        with self.assertRaisesRegex(notify.DeliveryError, "unconfirmed"):
+            notify.send_message(self.event, self.config, opener=opener, sleep=sleep)
+        self.assertEqual(len(opener.calls), 2)
+        sleep.assert_called_once_with(1)
+
+    def test_repeated_event_is_not_durably_deduplicated(self):
+        opener = FakeOpener(Response(), Response(b'{"result":"success","id":43}'))
+        self.assertEqual(
+            notify.send_message(self.event, self.config, opener=opener), 42
+        )
+        self.assertEqual(
+            notify.send_message(self.event, self.config, opener=opener), 43
+        )
+        self.assertEqual(len(opener.calls), 2)
+        self.assertEqual(opener.calls[0][0].data, opener.calls[1][0].data)
+        self.assertIn(
+            self.event.event_id,
+            urllib.parse.parse_qs(opener.calls[0][0].data.decode())["content"][0],
+        )
+
+    def test_invalid_or_oversized_rate_limit_body_does_not_retry(self):
+        for body in (
+            b'{"retry-after":true}',
+            b'{"retry-after":10,"retry-after":0}',
+            b'{"retry-after":0}' + b" " * notify.MAX_RESPONSE_BYTES,
+        ):
+            rejected = http_error(429, body=body)
+            opener, sleep = FakeOpener(rejected, Response()), Mock()
+            with (
+                self.subTest(body_size=len(body)),
+                self.assertRaises(notify.DeliveryError),
+            ):
+                notify.send_message(self.event, self.config, opener=opener, sleep=sleep)
+            self.assertEqual(len(opener.calls), 1)
+            sleep.assert_not_called()
 
     def test_posts_the_expected_zulip_form_with_header_authentication(self):
         opener = FakeOpener(Response())
