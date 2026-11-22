@@ -1,0 +1,15 @@
+- name: Require an explicit local fixture directory
+  ansible.builtin.assert:
+    that:
+      - inventory_hostname == 'localhost'
+      - ansible_connection == 'local'
+      - not (ansible_become | default(false) | bool)
+      - baseline_fixture_dir is match('^/tmp/openops-baseline-[A-Za-z0-9]+$')
+    fail_msg: Use an isolated local sandbox and an explicit fixture directory.
+
+- name: Write the baseline fixture
+  ansible.builtin.template:
+    src: baseline.txt.j2
+    dest: "{{ baseline_fixture_dir }}/baseline.txt"
+    mode: "0600"
+    follow: false

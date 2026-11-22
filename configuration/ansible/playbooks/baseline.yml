@@ -1,0 +1,7 @@
+- name: Manage the disposable baseline file
+  hosts: baseline_fixture
+  connection: local
+  gather_facts: false
+  become: false
+  roles:
+    - baseline_fixture
