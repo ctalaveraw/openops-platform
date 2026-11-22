@@ -95,9 +95,7 @@ def main(argv=None):
         for item in results:
             print(f"{item['status'].upper()} {item['file']}")
             for finding in item["findings"]:
-                print(
-                    f"  {finding['id']} {finding['path']}: {finding['message']}"
-                )
+                print(f"  {finding['id']} {finding['path']}: {finding['message']}")
             if item.get("error"):
                 category = item["error"]["category"]
                 message = item["error"]["message"]

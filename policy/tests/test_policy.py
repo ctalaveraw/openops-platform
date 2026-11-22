@@ -68,17 +68,13 @@ class DeploymentPolicyTests(unittest.TestCase):
         self.assertEqual(reports[0]["findings"], [])
 
     def test_unsupported_kind_is_error_not_allow(self):
-        process, reports = self.evaluate(
-            FIXTURES / "invalid/unsupported-kind.json"
-        )
+        process, reports = self.evaluate(FIXTURES / "invalid/unsupported-kind.json")
         self.assertEqual(process.returncode, 2)
         self.assertEqual(reports[0]["status"], "error")
         self.assertEqual(reports[0]["error"]["category"], "unsupported")
 
     def test_invalid_structure_is_error_not_denial(self):
-        process, reports = self.evaluate(
-            FIXTURES / "invalid/malformed-structure.json"
-        )
+        process, reports = self.evaluate(FIXTURES / "invalid/malformed-structure.json")
         self.assertEqual(process.returncode, 2)
         self.assertEqual(reports[0]["status"], "error")
         self.assertEqual(reports[0]["error"]["category"], "structure")
