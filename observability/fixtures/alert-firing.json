@@ -1,0 +1,45 @@
+{
+  "version": "4",
+  "groupKey": "{}:{alertname=\"HelloWorldProbeUnavailable\",instance=\"hello-world\"}",
+  "truncatedAlerts": 0,
+  "status": "firing",
+  "receiver": "fixture-only",
+  "groupLabels": {
+    "alertname": "HelloWorldProbeUnavailable",
+    "instance": "hello-world"
+  },
+  "commonLabels": {
+    "alertname": "HelloWorldProbeUnavailable",
+    "instance": "hello-world",
+    "job": "openops-http",
+    "severity": "warning",
+    "owner": "observability"
+  },
+  "commonAnnotations": {
+    "summary": "Hello World probe unavailable",
+    "description": "Probe failed or telemetry is missing. Inspect probe and scrape health.",
+    "runbook_url": "https://github.com/ctalaveraw/openops-platform/blob/main/observability/docs/RUNBOOK.md"
+  },
+  "externalURL": "https://alertmanager.example.invalid",
+  "alerts": [
+    {
+      "status": "firing",
+      "labels": {
+        "alertname": "HelloWorldProbeUnavailable",
+        "instance": "hello-world",
+        "job": "openops-http",
+        "severity": "warning",
+        "owner": "observability"
+      },
+      "annotations": {
+        "summary": "Hello World probe unavailable",
+        "description": "Probe failed or telemetry is missing. Inspect probe and scrape health.",
+        "runbook_url": "https://github.com/ctalaveraw/openops-platform/blob/main/observability/docs/RUNBOOK.md"
+      },
+      "startsAt": "2026-01-01T00:03:00Z",
+      "endsAt": "0001-01-01T00:00:00Z",
+      "generatorURL": "https://prometheus.example.invalid/graph",
+      "fingerprint": "0123456789abcdef"
+    }
+  ]
+}
