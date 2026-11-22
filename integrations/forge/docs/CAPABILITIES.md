@@ -29,8 +29,8 @@ is implied.
 
 ## Duplicate issues reconciled
 
-Closed #187 repeated release planning already tracked in #178/#179. Closed
-#188 repeated OCI digest replication already tracked in #180. Their closure
+Issue #187 repeated release planning already tracked in #178/#179.
+Issue #188 repeated OCI digest replication already tracked in #180. Their closure
 comments explicitly state that no implementation was completed. Neither is
 used as evidence of forge parity.
 
