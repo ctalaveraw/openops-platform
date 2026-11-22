@@ -39,8 +39,8 @@ a dedicated migration PR. Tests stay with their component.
 | 99 | Issue and PR tracking | No source ownership |
 
 Lane 08 excludes the Gotify subdirectory. Shared interface changes from any
-lane go through 00. A component can propose new dependencies with version,
-license, purpose and installation impact. Only 00 edits root locks and generic
+lane go through 00. A component can propose a dependency by naming its version and license.
+Explain why it is needed and how to install and test it. Only 00 edits root locks and generic
 workflow wiring. Separate feature branches keep unrelated changes out of a PR.
 
 ## Admission

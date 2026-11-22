@@ -25,11 +25,16 @@ From the repository root, run `make -C <component> check`.
 In a separate review, the coordinator adds an explicit child call using
 `$(MAKE) -C <component> check`. Never invoke the root check from the child.
 
-Submit the owned path, dependency list, positive and negative command results,
-and proof that the check has no delivery side effects. Document the component
+Submit the owned path and dependency list. Include positive and negative
+command results. Show that the check has no delivery side effects. Document the component
 in its README, a file map when needed, and docs/CHECKS.md. Include the actual
 vendored SlopMonster result for relevant prose. Keep local and CI behavior
 equivalent on both forges where verified.
+
+Run `make check-coordination` at the root to test the delivery guard and
+review the shared docs. The tests change copies of the workflow definition
+in memory. Added automatic triggers or weaker publish guards must fail.
+If a check fails, inspect its assertion or prose finding before retrying.
 
 The root currently delegates to Hello World. Additional components require
 review. A file, empty folder or passing no-op is not an admitted component.
