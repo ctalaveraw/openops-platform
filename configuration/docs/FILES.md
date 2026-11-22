@@ -11,5 +11,5 @@
 | `tests/test_baseline.py` | Input and render assertions |
 | `Makefile` | Local check commands |
 
-The fixture inventory is not the infrastructure output contract from issue
-#86. A shared inventory format needs review by lanes 04 and 00.
+The fixture inventory is not the infrastructure output contract from
+issue #86. A shared inventory format needs review by lanes 04 and 00.
