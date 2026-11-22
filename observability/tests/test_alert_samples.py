@@ -9,9 +9,7 @@ FIXTURES = Path(__file__).resolve().parents[1] / "fixtures"
 
 
 def load(status: str) -> dict:
-    return json.loads(
-        (FIXTURES / f"alert-{status}.json").read_text(encoding="utf-8")
-    )
+    return json.loads((FIXTURES / f"alert-{status}.json").read_text(encoding="utf-8"))
 
 
 class AlertSampleTests(unittest.TestCase):
