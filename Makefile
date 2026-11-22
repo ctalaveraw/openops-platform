@@ -8,7 +8,7 @@
 SHELL := /bin/sh
 
 # Define tasks, .PHONY is used to not collide with files that match task names
-.PHONY: help bootstrap setup doctor-python check check-apps lint lint-markdown lint-yaml lint-python lint-shell lint-json lint-toml lint-make lint-web lint-prose validate-actions
+.PHONY: help bootstrap setup doctor-python check check-apps check-coordination lint lint-markdown lint-yaml lint-python lint-shell lint-json lint-toml lint-make lint-web lint-prose validate-actions
 
 help:
 	@echo "setup			Install locked repository tooling"
@@ -25,6 +25,7 @@ help:
 	@echo "lint-prose		Check documentation prose"
 	@echo "validate-actions	Check GitHub Actions workflows"
 	@echo "check-apps\t\tRun independent application checks"
+	@echo "check-coordination\tCheck delivery guard and coordination docs"
 	@echo "check			Run required checks"
 
 # Prepare the project runtime, then install locked tooling
@@ -42,7 +43,7 @@ doctor-python:
 	@uv sync --locked --no-python-downloads --offline --check --quiet
 
 # "check" requires platform gates and application checks
-check: lint validate-actions check-apps
+check: lint validate-actions check-apps check-coordination
 
 # "lint" runs the required source checks
 lint: lint-markdown lint-yaml lint-python lint-shell lint-json lint-toml lint-make lint-web
@@ -90,3 +91,11 @@ validate-actions: doctor-python
 # Applications own their checks. Root Make only delegates; no container is started.
 check-apps:
 	@$(MAKE) -C apps/hello-world check
+
+# Shared workflow guard and architecture prose. No delivery commands.
+check-coordination: doctor-python
+	@.venv/bin/python -m unittest discover -s tests/coordination -v
+	@.venv/bin/python vendor/slopmonster/deslop.py README.md
+	@.venv/bin/python vendor/slopmonster/deslop.py docs/adr/0001-offline-components.md
+	@.venv/bin/python vendor/slopmonster/deslop.py contracts/component-v1.md
+	@.venv/bin/python vendor/slopmonster/deslop.py docs/delivery/hello-world.md
