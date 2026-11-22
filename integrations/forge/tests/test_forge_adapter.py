@@ -79,8 +79,9 @@ class AdapterTests(unittest.TestCase):
         for key, value in edits:
             p = copy.deepcopy(base)
             p[key] = value
-            with self.subTest(key=key, value=value), self.assertRaises(
-                adapter.ForgeError
+            with (
+                self.subTest(key=key, value=value),
+                self.assertRaises(adapter.ForgeError),
             ):
                 adapter.normalize("github", REPO, 17, p)
         for repo in ("../bad", "a/b/c", "a b/repo"):
@@ -110,11 +111,15 @@ class AdapterTests(unittest.TestCase):
     def test_api_requests_are_only_get(self):
         cases = (
             (
-                "github", 17, None,
+                "github",
+                17,
+                None,
                 "https://api.github.com/repos/example/openops-platform/pulls/17",
             ),
             (
-                "forgejo", 31, "https://forge.example.invalid",
+                "forgejo",
+                31,
+                "https://forge.example.invalid",
                 "https://forge.example.invalid/api/v1/repos/"
                 "example/openops-platform/pulls/31",
             ),
@@ -146,9 +151,10 @@ class AdapterTests(unittest.TestCase):
         )
         for failure in cases:
             fake.open.side_effect = failure
-            with self.subTest(failure=type(failure).__name__), self.assertRaises(
-                adapter.ForgeError
-            ) as raised:
+            with (
+                self.subTest(failure=type(failure).__name__),
+                self.assertRaises(adapter.ForgeError) as raised,
+            ):
                 adapter.fetch_pull_request("github", REPO, 17, opener=fake)
             self.assertNotIn("private", str(raised.exception))
 
@@ -174,8 +180,14 @@ class PreviewTests(unittest.TestCase):
         with contextlib.redirect_stdout(output):
             status = adapter.main(
                 [
-                    "--provider", "github", "--repository", REPO,
-                    "--number", "17", "--fixture", str(FIXTURES / "github-pr.json"),
+                    "--provider",
+                    "github",
+                    "--repository",
+                    REPO,
+                    "--number",
+                    "17",
+                    "--fixture",
+                    str(FIXTURES / "github-pr.json"),
                 ]
             )
         self.assertEqual(status, 0)
@@ -190,8 +202,14 @@ class PreviewTests(unittest.TestCase):
             with contextlib.redirect_stderr(output):
                 status = adapter.main(
                     [
-                        "--provider", "github", "--repository", REPO,
-                        "--number", "17", "--fixture", str(p),
+                        "--provider",
+                        "github",
+                        "--repository",
+                        REPO,
+                        "--number",
+                        "17",
+                        "--fixture",
+                        str(p),
                     ]
                 )
             self.assertEqual(status, 2)
