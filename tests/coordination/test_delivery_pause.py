@@ -68,9 +68,7 @@ class DeliveryPauseTests(unittest.TestCase):
 
     def test_publish_default_is_rejected(self) -> None:
         changed = copy.deepcopy(self.workflow)
-        changed["on"]["workflow_dispatch"]["inputs"]["operation"]["default"] = (
-            "publish"
-        )
+        changed["on"]["workflow_dispatch"]["inputs"]["operation"]["default"] = "publish"
         with self.assertRaises(AssertionError):
             self.assert_manual_only(changed)
 
@@ -93,15 +91,11 @@ class DeliveryPauseTests(unittest.TestCase):
             self.assert_manual_only(changed)
 
     def test_repository_checks_remain_automatic(self) -> None:
-        workflow = yaml.safe_load(
-            (WORKFLOWS / "lint.yml").read_text(encoding="utf-8")
-        )
+        workflow = yaml.safe_load((WORKFLOWS / "lint.yml").read_text(encoding="utf-8"))
         self.assertEqual(set(workflow["on"]), {"pull_request", "push"})
         self.assertEqual(workflow["on"]["push"]["branches"], ["main"])
         self.assertEqual(workflow["permissions"], {"contents": "read"})
-        self.assertEqual(
-            workflow["jobs"]["checks"]["steps"][-1]["run"], "make check"
-        )
+        self.assertEqual(workflow["jobs"]["checks"]["steps"][-1]["run"], "make check")
 
 
 if __name__ == "__main__":
