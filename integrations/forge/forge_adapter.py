@@ -8,6 +8,7 @@ import sys
 import urllib.error
 import urllib.parse
 import urllib.request
+from datetime import datetime
 from pathlib import Path
 
 MAX_RESPONSE_BYTES = 65_536
@@ -91,10 +92,15 @@ def normalize(provider, repository, number, payload, *, site=None):
     if state not in ("open", "closed"):
         raise ForgeError("unsupported pull request state")
     merged_at = payload.get("merged_at")
-    if merged_at is not None and (
-        not isinstance(merged_at, str) or not merged_at or state != "closed"
-    ):
-        raise ForgeError("merged_at requires a closed PR and a timestamp string")
+    if merged_at is not None:
+        if not isinstance(merged_at, str) or state != "closed":
+            raise ForgeError("merged_at requires a closed PR and a timestamp string")
+        try:
+            merged_time = datetime.fromisoformat(merged_at.replace("Z", "+00:00"))
+        except ValueError:
+            raise ForgeError("merged_at must be an offset-aware timestamp") from None
+        if merged_time.tzinfo is None:
+            raise ForgeError("merged_at must be an offset-aware timestamp")
     status = "merged" if merged_at is not None else state
     endpoint = "pull" if provider == "github" else "pulls"
     url = f"{web}/{repository}/{endpoint}/{number}"

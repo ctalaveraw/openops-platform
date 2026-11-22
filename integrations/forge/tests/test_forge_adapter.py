@@ -64,6 +64,13 @@ class AdapterTests(unittest.TestCase):
         self.assertEqual(merged["data"]["state"], "merged")
         self.assertNotEqual(merged["id"], self.event("github")["id"])
 
+    def test_reject_invalid_merge_timestamp(self):
+        for timestamp in ("nonsense", "2026-11-20", "2026-11-20T00:00:00"):
+            payload = self.payload("github")
+            payload.update(state="closed", merged_at=timestamp)
+            with self.subTest(timestamp=timestamp), self.assertRaises(adapter.ForgeError):
+                adapter.normalize("github", REPO, 17, payload)
+
     def test_reject_invalid_input(self):
         base = self.payload("github")
         edits = (
