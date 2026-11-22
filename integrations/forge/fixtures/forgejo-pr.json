@@ -1,0 +1,7 @@
+{
+  "number": 31,
+  "state": "open",
+  "merged_at": null,
+  "head": {"sha": "0123456789abcdef0123456789abcdef01234567"},
+  "html_url": "https://forge.example.invalid/example/openops-platform/pulls/31"
+}

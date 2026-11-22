@@ -1,0 +1,18 @@
+{
+  "specversion": "1.0",
+  "id": "3fd43e3ee22bc18f5e5c1f42fce43a48aab8c1ea57432123de34b3c3db6d248f",
+  "source": "https://forge.example.invalid/example/openops-platform",
+  "type": "dev.openops.forge.pull_request.snapshot.v1",
+  "subject": "pulls/31",
+  "datacontenttype": "application/json",
+  "data": {
+    "schema_version": 1,
+    "provider": "forgejo",
+    "repository": "example/openops-platform",
+    "number": 31,
+    "state": "open",
+    "revision": "0123456789abcdef0123456789abcdef01234567",
+    "logical_change": "example/openops-platform@0123456789abcdef0123456789abcdef01234567",
+    "url": "https://forge.example.invalid/example/openops-platform/pulls/31"
+  }
+}

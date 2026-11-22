@@ -1,0 +1,7 @@
+{
+  "number": 17,
+  "state": "open",
+  "merged_at": null,
+  "head": {"sha": "0123456789abcdef0123456789abcdef01234567"},
+  "html_url": "https://github.com/example/openops-platform/pull/17"
+}
