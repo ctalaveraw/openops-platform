@@ -40,7 +40,8 @@ The unit tests modify temporary copies or use the committed invalid examples.
 - Wrong CSV contents fail parity. Missing fields fail the CSV loader.
 - Duplicate INI or properties keys fail parsing.
 - Missing page assets or external manifest URLs fail the static check.
-- An invalid SVG root or invalid matching version strings fail the static check.
+- An invalid SVG root fails the SVG validator. Invalid version strings
+  fail the full source verifier.
 - A changed served file fails its committed checksum.
 - Source paths excluded by Git fail the ignore-rule test.
 - A Dockerfile that copies the whole directory fails its source contract.
@@ -58,8 +59,9 @@ repository-wide JSON lint does not reject a deliberate test input.
 ## Deferred checks
 
 Native Gettext validation, Dockerignore matching and full OpenAPI lint need
-reviewed tooling. Hadolint and the Compose CLI are separate checks. Repository-wide validators are maintained at the repository root. No local port,
-registry or cluster is needed to complete this work.
+reviewed tooling. Hadolint and the Compose CLI are separate checks.
+Repository-wide validators are maintained at the repository root.
+No local port, registry or cluster is needed to complete this work.
 
 Root `make check-apps` delegates to the child. The existing image workflow
 is separate from that command. Do not publish or deploy during offline work.

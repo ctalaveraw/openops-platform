@@ -5,7 +5,7 @@ that directory alone. No additional application service exists.
 
 ## Runtime files
 
-| File | Baseline | Local check |
+| File | Coverage | Local check |
 | --- | --- | --- |
 | `public/index.html` | Tested | Heading, links, no script or iframe, checksum |
 | `public/style.css` | Partial | Linked asset exists, checksum. Root CSS lint |
@@ -18,7 +18,7 @@ that directory alone. No additional application service exists.
 
 ## Episode and other specimens
 
-| File | Baseline | Local check |
+| File | Coverage | Local check |
 | --- | --- | --- |
 | `fixtures/hello.json` | Tested | JSON and parity |
 | `fixtures/hello.jsonl` | Tested | Single JSON record and parity |
@@ -41,7 +41,7 @@ that directory alone. No additional application service exists.
 
 ## Invalid specimens
 
-| File | Baseline | Local check |
+| File | Coverage | Local check |
 | --- | --- | --- |
 | `fixtures/invalid/bad.json.txt` | Tested | JSON parser rejects malformed input |
 | `fixtures/invalid/bad.xml` | Tested | XML parser rejects malformed input |
@@ -54,7 +54,7 @@ Other negative tests mutate copies in temporary directories.
 
 ## Contracts and packaging
 
-| File | Baseline | Local check |
+| File | Coverage | Local check |
 | --- | --- | --- |
 | `contracts/component.json` | Tested | Name, paths, port, targets, optional schema |
 | `contracts/workload.yaml` | Partial | Metadata parity, optional schema |
@@ -75,7 +75,7 @@ edit repository-wide rules.
 
 ## Checks and guides
 
-| File | Baseline | Local check |
+| File | Coverage | Local check |
 | --- | --- | --- |
 | `Makefile` | Tested | Required targets, dry run, root delegation |
 | `checks/__main__.py` | Tested | Select static and format validators |
@@ -100,7 +100,9 @@ edit repository-wide rules.
 | `docs/CHECKS.md` | Optional | Prose checker and command review |
 | `docs/MAKE-CONTRACT.md` | Optional | Prose checker and Make interface review |
 
-Baseline describes the checks present before the coverage update. Partial
-means a limited assertion exists. Optional means a separate tool is needed.
+Coverage describes the current validation scope. Tested means the listed
+assertion exists. Partial means only some properties are checked.
+Optional requires a separate command. Missing means stronger
+validation is absent, not that the source file is missing.
 The local check column describes intended coverage, not a CI result or a claim
 that every grammar and runtime behavior has been tested.
