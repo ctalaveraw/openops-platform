@@ -132,9 +132,7 @@ def verify_static() -> None:
     if (ROOT / "public/healthz").read_text(encoding="utf-8") != "ok\n":
         raise ValueError("healthz: expected 'ok' followed by newline")
     version = (ROOT / "VERSION").read_text(encoding="utf-8")
-    if not re.fullmatch(
-        r"(?:0|[1-9][0-9]*)(?:[.](?:0|[1-9][0-9]*)){2}\n", version
-    ):
+    if not re.fullmatch(r"(?:0|[1-9][0-9]*)(?:[.](?:0|[1-9][0-9]*)){2}\n", version):
         raise ValueError("VERSION: expected three numeric version fields")
     if (ROOT / "public/version.txt").read_text(encoding="utf-8") != version:
         raise ValueError("version.txt: differs from VERSION")

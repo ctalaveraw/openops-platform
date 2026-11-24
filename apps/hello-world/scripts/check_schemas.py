@@ -66,9 +66,7 @@ def main() -> int:
     def load(path: str) -> dict:
         content = (ROOT / path).read_text(encoding="utf-8")
         return (
-            yaml.safe_load(content)
-            if path.endswith(".yaml")
-            else json.loads(content)
+            yaml.safe_load(content) if path.endswith(".yaml") else json.loads(content)
         )
 
     try:
