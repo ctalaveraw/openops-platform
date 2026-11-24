@@ -102,6 +102,9 @@ errors use controlled diagnostics without printing credentials or server bodies.
 - Longer or unsupported delays produce an error so the operator can try later.
 - Authentication errors, redirects, timeouts, server errors and malformed
   acknowledgements end the command without automatic resending.
+- Duplicate acknowledgement fields are rejected. Oversized rate-limit bodies
+  and boolean or duplicate retry delays stop the command. Parser depth errors
+  produce controlled diagnostics.
 
 A connection error or missing acknowledgement can happen after a message was
 accepted. Inspect the channel for the event ID before manually retrying.
@@ -127,14 +130,19 @@ This change makes no workflow or credential-storage changes in GitHub.
 .venv/bin/python -m unittest discover -s tests -v
 ```
 
-The suite uses fake credentials and in-memory HTTP responses.
-It covers event validation and provider fixtures.
-Separate cases check recovery references and message formatting.
-The suite also exercises organization/channel checks.
-HTTP cases cover authentication failures and rate limits.
-Other cases check redirects and timeouts. Malformed responses are also tested.
-CLI tests check exit codes and preview's credential/network isolation.
-They also verify invocation from another working directory.
+The suite has 39 tests using fake credentials and in-memory HTTP responses.
+It checks both provider fixtures, recovery references, Markdown delimiters,
+organization/channel checks, authentication failures and bounded retries.
+Response-read timeouts, malformed or duplicate acknowledgements and invalid
+rate-limit bodies stop delivery. A repeated explicit send demonstrates that
+event IDs do not suppress duplicates. CLI tests cover exit codes, preview
+isolation and invocation from another working directory.
+
+The opt-in [routing preview](../../integrations/chatops/README.md) proposes
+distinct GitHub/Forgejo PR topics without changing the v1 file or this command's
+default destination. Run `make -C integrations/chatops check` for its source and
+test checks. It also scores the relevant documentation. Shared routing and live
+permissions remain separate acceptance work. Replay is still tracked in #115.
 
 `.github/workflows/notifications-tests.yml` runs this same command for changes to
 the notification tools and their inputs. It uses the existing pinned checkout
