@@ -1,72 +1,65 @@
 # Checks and troubleshooting
 
-Run these commands from `apps/hello-world/`.
+Run commands from `apps/hello-world/` in a full OpenOps checkout.
 
-| Command | Does it need a container? | What it checks |
+| Command | Needs | Expected result |
 | --- | --- | --- |
-| `make check` | No | Python/shell syntax, fixture parity, Make target preview, source checksums, negative tests |
-| `make test` | No | Python unit tests only |
-| `make lint` | No | Script syntax and source/fixture validation |
-| `make run` | No | Local HTTP server, runs until Ctrl+C |
-| `make smoke` | Running HTTP server | Banner, CSS, `/healthz` and expected 404 |
-| `make schema-check` | No | Full JSON Schema, YAML and XSD with optional Python packages |
-| `make prose-check` | No | README, file map, check notes and banner with vendored SlopMonster |
-| `make diagram-check` | Graphviz (optional) | Parse sample DOT graph, does not deploy or generate tracked files |
-| `make compose-check` | Docker CLI | Compose file structure, does not start services |
-| `make build` | Docker daemon | OCI image build, manual only |
-| `make up` / `make down` | Docker daemon | Start/stop demo container, manual only |
+| `make check` | Python, Make, shell, Git | Source checks and unit tests pass |
+| `make lint` | Python and shell | Script syntax and fixture parity pass |
+| `make test` | Python, Make, Git | Unit tests pass |
+| `make schema-check` | Optional Python libraries | Good schemas pass, invalid documents fail |
+| `make prose-check` | Vendored SlopMonster | Each guide and banner scores 5/5 |
+| `make diagram-check` | Graphviz | DOT file parses |
+| `make compose-check` | Compose CLI | Resolved Compose model is valid |
+| `make run` | Python | Local development server starts |
+| `make smoke` | Running server and curl | Banner, CSS, health and 404 pass |
+| `make build` | Docker daemon | Local image builds |
+| `make up` / `make down` | Docker daemon | Local service starts or stops |
 
-`make check` requires Python 3.11 or newer for `tomllib`. It makes no network
-requests and does not start the container. The optional schema check requires
-`jsonschema`, `PyYAML`, and `lxml` in the Python environment. The prose check
-uses the pinned script at `../../vendor/slopmonster/deslop.py` in the full
-OpenOps checkout. Neither optional check runs under `make check`. A missing
-optional tool causes a clear error, the default check does not depend on them.
+Python 3.11 or newer is needed for the local standard library checks. Use the
+repository's pinned Python for CI parity. The default check makes no network
+requests and starts no services. Git tests use temporary repositories.
 
-The component tests use `make -n` to preview child targets without running
-them. They check that the component metadata matches the existing workload
-contract. They also compare committed SHA-256 sums with the served files.
-The extra fixture tests parse SQL in an in-memory SQLite database and inspect a
-Prometheus text sample, HTTP request examples, an RSS item, a sample environment
-file and one log line. They also check line-ending rules and archive round trips.
-No database, metrics endpoint, feed or config loader is started.
-The metrics check covers this one known example, not the full Prometheus grammar.
+The schema check uses `jsonschema`, `PyYAML` and `lxml`. It checks all three
+JSON schemas and the XSD with accepted and rejected documents. The YAML
+checks compare the Compose service and the OpenAPI health path against this
+fixture. They do not replace the native Compose or OpenAPI validators.
 
-`make diagram-check` is a separate, opt-in Graphviz check. It requires `dot`
-and runs no image build or deployment.
+The SQL example executes in memory. Metrics, RSS, request, environment and
+log examples are read as test data. The metrics check covers the sample line,
+not the full Prometheus grammar. The Dockerfile test checks its four source
+instructions. The exclusion-list test does not evaluate Docker's matching
+rules. No image is built by the required check.
 
 ## Expected failures
 
-- Modify one CSV title: the parity check reports which format disagrees.
-- Add a second CSV row with the same ID: validation rejects duplicate IDs.
-- Break JSON or XML syntax: the negative tests demonstrate rejection.
-- Change the banner heading: the static asset test fails.
-- Change the metric value to a word: the metrics test fails.
-- Break the SQL table name: the SQLite test fails.
-- Stop the server, then run `make smoke`: the shell command fails.
-- Edit `public/style.css`: the SHA-256 check fails until the manifest is updated.
+The unit tests modify temporary copies or use the committed invalid examples.
 
-After an intended change to a served file, regenerate its committed digest from
-this directory with `sha256sum public/* > fixtures/public.sha256` (GNU coreutils).
-Review the diff, do not accept unrelated content changes. This catches accidental
-source changes, not malicious edits to both files. The local `.gitattributes`
-keeps served text files at LF line endings on different operating systems.
+- Wrong CSV contents fail parity. Missing fields fail the CSV loader.
+- Duplicate INI or properties keys fail parsing.
+- Missing page assets or external manifest URLs fail the static check.
+- An invalid SVG root or invalid matching version strings fail the static check.
+- A changed served file fails its committed checksum.
+- Source paths excluded by Git fail the ignore-rule test.
+- A Dockerfile that copies the whole directory fails its source contract.
+- The optional schema checker rejects incomplete XML and invalid JSON records.
 
-Restore the fixture after each experiment. Broken inputs in
-`fixtures/invalid/` are intentional, tests check that they are rejected.
-The malformed JSON is named `bad.json.txt` because the platform-wide JSON
-linter checks all `.json` files, including negative examples. The fixture test
-still parses that file and expects a JSON decoding error.
+Run `make test` to identify the failing assertion. Run `make lint` if the source
+verifier reports a failure. Restore unintended changes before retrying. For
+an intended served-file change, regenerate the manifest with
+`sha256sum public/* > fixtures/public.sha256` and review the diff. Checksums
+catch accidental drift, not a malicious edit to both files.
 
-## What has not been exercised
+The malformed JSON in `fixtures/invalid/bad.json.txt` has a text suffix so
+repository-wide JSON lint does not reject a deliberate test input.
 
-Root `make check-apps` delegates to this component's offline `make check`.
-The optional container check runs in a separate CI job, not as part of the
-normal Make check. GitHub publishes a tested image only after a trusted push
-to `main`. There is no cluster rollout, GitOps manifest, webhook, or alert.
+## Deferred checks
 
-When the platform is ready, add one integration at a time and link to a real
-command or test result. Do not mark a check as working because its file exists.
+Native Gettext validation, Dockerignore matching and full OpenAPI lint need
+reviewed tooling. Hadolint and the Compose CLI are separate checks. Root
+validators remain owned by the platform validation lane. No local port,
+registry or cluster is needed to complete this work.
 
-[Parent/child Make contract](MAKE-CONTRACT.md) explains how the platform may
-invoke this component later without importing its code.
+Root `make check-apps` delegates to the child. The existing image workflow
+is separate from that command. Do not publish or deploy during offline work.
+See [the Make contract](MAKE-CONTRACT.md) and [file coverage](FILES.md).

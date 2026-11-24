@@ -22,7 +22,9 @@ def load_delimited(path: Path, delimiter: str) -> dict[str, str]:
         if reader.fieldnames != list(FIELDS):
             raise ValueError(f"{path.name}: expected columns {FIELDS}")
         rows = list(reader)
-    if len(rows) != 1 or any(set(row) != set(FIELDS) for row in rows):
+    if len(rows) != 1 or any(
+        set(row) != set(FIELDS) or None in row.values() for row in rows
+    ):
         raise ValueError(f"{path.name}: expected one complete episode, no duplicates")
     return rows[0]
 
@@ -129,9 +131,12 @@ def verify_static() -> None:
         raise ValueError("index.html: unexpected scripted or embedded content")
     if (ROOT / "public/healthz").read_text(encoding="utf-8") != "ok\n":
         raise ValueError("healthz: expected 'ok' followed by newline")
-    if (ROOT / "public/version.txt").read_text(encoding="utf-8") != (
-        ROOT / "VERSION"
-    ).read_text(encoding="utf-8"):
+    version = (ROOT / "VERSION").read_text(encoding="utf-8")
+    if not re.fullmatch(
+        r"(?:0|[1-9][0-9]*)(?:[.](?:0|[1-9][0-9]*)){2}\n", version
+    ):
+        raise ValueError("VERSION: expected three numeric version fields")
+    if (ROOT / "public/version.txt").read_text(encoding="utf-8") != version:
         raise ValueError("version.txt: differs from VERSION")
     if (ROOT / "public/robots.txt").read_text(encoding="utf-8") != (
         "User-agent: *\nDisallow:\n"
@@ -140,9 +145,18 @@ def verify_static() -> None:
     manifest = json.loads(
         (ROOT / "public/site.webmanifest").read_text(encoding="utf-8")
     )
-    if manifest["icons"][0]["src"] != "/favicon.svg":
+    if manifest.get("start_url") != "/" or manifest.get("display") != "standalone":
+        raise ValueError("site.webmanifest: wrong start URL or display mode")
+    if manifest.get("icons") != [
+        {"src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml"}
+    ]:
         raise ValueError("site.webmanifest: wrong icon")
-    ET.parse(ROOT / "public/favicon.svg")
+    svg = ET.parse(ROOT / "public/favicon.svg").getroot()
+    namespace = "{http://www.w3.org/2000/svg}"
+    if svg.tag != namespace + "svg" or svg.get("viewBox") != "0 0 64 64":
+        raise ValueError("favicon.svg: wrong SVG root or viewBox")
+    if svg.findtext(namespace + "title") != "OpenOps star":
+        raise ValueError("favicon.svg: missing icon title")
     ET.parse(ROOT / "schemas/hello.xsd")
     json.loads((ROOT / "schemas/hello.schema.json").read_text(encoding="utf-8"))
     json.loads((ROOT / "schemas/workload.schema.json").read_text(encoding="utf-8"))
@@ -160,6 +174,7 @@ def main() -> int:
         verify_formats()
     except (
         OSError,
+        configparser.Error,
         ValueError,
         KeyError,
         TypeError,

@@ -2,7 +2,9 @@
 
 import hashlib
 import json
+import shutil
 import subprocess
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -63,10 +65,10 @@ class ComponentContractTests(unittest.TestCase):
         self.assertNotIn("docker compose", result.stdout)
         self.assertNotIn("curl ", result.stdout)
 
-    def test_source_checksum_manifest_covers_only_public_files(self) -> None:
-        lines = (ROOT / "fixtures/public.sha256").read_text(encoding="utf-8")
+    def assert_public_checksums(self, root: Path) -> None:
+        lines = (root / "fixtures/public.sha256").read_text(encoding="utf-8")
         expected = {
-            f"public/{p.name}" for p in (ROOT / "public").iterdir() if p.is_file()
+            f"public/{p.name}" for p in (root / "public").iterdir() if p.is_file()
         }
         found = set()
         for line in lines.splitlines():
@@ -75,15 +77,24 @@ class ComponentContractTests(unittest.TestCase):
             self.assertTrue(path.startswith("public/"))
             self.assertNotIn(path, found)
             found.add(path)
-            actual = hashlib.sha256((ROOT / path).read_bytes()).hexdigest()
+            actual = hashlib.sha256((root / path).read_bytes()).hexdigest()
             self.assertEqual(actual, digest)
         self.assertEqual(found, expected)
 
+    def test_source_checksum_manifest_covers_only_public_files(self) -> None:
+        self.assert_public_checksums(ROOT)
+
     def test_mutated_content_does_not_match_committed_digest(self) -> None:
-        content = (ROOT / "public/healthz").read_bytes()
-        digest = hashlib.sha256(content).hexdigest()
-        changed = hashlib.sha256(content + b"broken").hexdigest()
-        self.assertNotEqual(digest, changed)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            shutil.copytree(ROOT / "public", root / "public")
+            (root / "fixtures").mkdir()
+            shutil.copyfile(
+                ROOT / "fixtures/public.sha256", root / "fixtures/public.sha256"
+            )
+            (root / "public/healthz").write_text("broken\n", encoding="utf-8")
+            with self.assertRaises(AssertionError):
+                self.assert_public_checksums(root)
 
 
 if __name__ == "__main__":

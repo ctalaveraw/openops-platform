@@ -1,51 +1,96 @@
-# File map
+# File map and coverage
 
-Read this table when a file appears unrelated to a single web page.
+All files except `public/` are development material. The Dockerfile copies
+that directory alone. No additional application service exists.
 
-| File or directory | Why it exists | Check or future integration |
+## Runtime files
+
+| File | Baseline | Local check |
 | --- | --- | --- |
-| `public/index.html` | Visible anime banner | HTML structure and banner test |
-| `public/style.css` | Banner appearance | Local CSS reference test, future CSS lint |
-| `public/favicon.svg` | Vector icon | XML parser, future SVG checks |
-| `public/site.webmanifest` | Web metadata | JSON parse, URL reference tests |
-| `public/robots.txt` | Crawl instructions | Text contract test |
-| `public/healthz` | Static HTTP probe | Body test, future HTTP readiness |
-| `public/version.txt`, `VERSION` | Version marker | Equality test, future release tagging |
-| `fixtures/hello.json` | Reference episode record | Python JSON parsing |
-| `fixtures/hello.csv`, `.tsv` | Delimited data | Python CSV parsing and parity |
-| `fixtures/hello.xml` | XML specimen | XML parser, XSD schema check |
-| `fixtures/hello.yaml` | YAML specimen | Root YAML lint, focused parity check |
-| `fixtures/hello.toml` | TOML specimen | Python `tomllib` and parity |
-| `fixtures/hello.ini` | INI specimen | Python `configparser` and parity |
-| `fixtures/hello.jsonl` | Line-delimited JSON | Python JSON decoding and parity |
-| `fixtures/hello.properties` | Key/value specimen | Python parity and duplicate-key check |
-| `fixtures/invalid/` | Deliberately broken inputs (`bad.json.txt` is malformed JSON) | Explicit negative tests, invalid JSON keeps a `.txt` suffix so repository-wide JSON lint can parse all `.json` files |
-| `fixtures/public.sha256` | Source checksums for the seven served files | Python SHA-256 parity, later artifact integrity |
-| `contracts/component.json` | Example child-Make interface | Python target checks, optional JSON Schema |
-| `schemas/component.schema.json` | Interface shape | Optional JSON Schema check |
-| `docs/MAKE-CONTRACT.md` | Parent/child Make instructions | Example only, no root wiring |
-| `schemas/hello.schema.json` | JSON data contract | JSON Schema validator (optional extra check) |
-| `schemas/hello.xsd` | XML contract | XSD validator (optional extra check) |
-| `schemas/workload.schema.json` | Workload contract | JSON Schema validator (optional extra check) |
-| `contracts/workload.yaml` | Example platform input | YAML lint, optional schema validation |
-| `contracts/openapi.yaml` | One documented HTTP response | YAML lint, future OpenAPI validator |
-| `l10n/en.po` | Gettext sample, not used by the site | Future `msgfmt --check` |
-| `fixtures/hello.sql`, `invalid/bad.sql` | One SQLite record and a failure case | In-memory SQL execution, no database file |
-| `fixtures/hello.prom`, `invalid/bad.prom` | Sample metrics text and a bad value | Narrow metric format and negative checks, no exporter |
-| `fixtures/hello.http` | Two example HTTP requests | Offline path and port checks, no request sent |
-| `fixtures/hello.rss.xml` | One unpublished feed item | XML parsing and episode parity |
-| `fixtures/hello.env.example` | Harmless configuration sample | Key/value checks, not loaded or sourced |
-| `fixtures/hello.log` | One example log record | Timestamp and field checks, not emitted by the app |
-| `fixtures/hello.dot` | Planned source-to-image diagram | Optional Graphviz syntax check |
-| `.editorconfig`, `.gitattributes` | File editing and line-ending rules | Focused setting checks, scoped to this folder |
-| `tests/test_specimens.py` | Tests for the extra specimens | SQL, metrics, feed, HTTP, log, archive round-trip |
-| `scripts/verify.py` | Local source/fixture checks | Python unit tests and `make lint` |
-| `scripts/check_schemas.py` | Optional full schema check | `make schema-check` |
-| `scripts/smoke.sh` | Check a running HTTP server | `sh -n`, manual `make smoke` |
-| `tests/` | Verify success and expected failure | Python `unittest`, including Make preview |
-| `Dockerfile`, `.dockerignore` | Optional static image | Future image lint/build/inspection |
-| `compose.yaml` | Optional local container run | `make compose-check` |
-| `Makefile` | Operator entry points | `make help`, `make check`, optional `make prose-check` |
+| `public/index.html` | Tested | Heading, links, no script or iframe, checksum |
+| `public/style.css` | Partial | Linked asset exists, checksum. Root CSS lint |
+| `public/favicon.svg` | Partial | SVG root, viewBox, title, checksum |
+| `public/site.webmanifest` | Partial | JSON, local start URL, icon, display, checksum |
+| `public/robots.txt` | Tested | Exact crawl instructions, checksum |
+| `public/healthz` | Tested | Body and checksum |
+| `public/version.txt` | Partial | Equals VERSION, checksum |
+| `VERSION` | Partial | Three numeric fields, parity |
 
-Only `public/` is copied into the image. The other files are exercise material
-and remain outside the served web directory.
+## Episode and other specimens
+
+| File | Baseline | Local check |
+| --- | --- | --- |
+| `fixtures/hello.json` | Tested | JSON and parity |
+| `fixtures/hello.jsonl` | Tested | Single JSON record and parity |
+| `fixtures/hello.csv` | Tested | Columns, one complete row, parity |
+| `fixtures/hello.tsv` | Tested | Same as CSV with tab delimiter |
+| `fixtures/hello.xml` | Tested | XML fields and parity, optional XSD |
+| `fixtures/hello.yaml` | Partial | Three quoted fields and parity, root YAML lint |
+| `fixtures/hello.toml` | Tested | TOML and parity |
+| `fixtures/hello.ini` | Tested | INI section and parity, duplicate rejection |
+| `fixtures/hello.properties` | Tested | Key/value parity, duplicate rejection |
+| `fixtures/hello.sql` | Tested | SQLite in memory |
+| `fixtures/hello.prom` | Partial | Known metric line, no general grammar check |
+| `fixtures/hello.http` | Tested | Request paths and port, no network |
+| `fixtures/hello.rss.xml` | Tested | RSS element checks and episode parity |
+| `fixtures/hello.env.example` | Tested | Key/value parity, never sourced |
+| `fixtures/hello.log` | Tested | Timestamp and sample fields |
+| `fixtures/hello.dot` | Partial | Expected graph edges, optional Graphviz |
+| `fixtures/public.sha256` | Tested | SHA-256 parity for all served files |
+| `l10n/en.po` | Missing | Gettext validation pending |
+
+## Invalid specimens
+
+| File | Baseline | Local check |
+| --- | --- | --- |
+| `fixtures/invalid/bad.json.txt` | Tested | JSON parser rejects malformed input |
+| `fixtures/invalid/bad.xml` | Tested | XML parser rejects malformed input |
+| `fixtures/invalid/duplicate.csv` | Tested | Reject repeated rows |
+| `fixtures/invalid/bad.sql` | Tested | SQLite rejects missing table |
+| `fixtures/invalid/bad.prom` | Tested | Known metric line rejects text value |
+| `fixtures/invalid/component.json` | Optional | JSON Schema rejects wrong Make target |
+
+Other negative tests mutate copies in temporary directories.
+
+## Contracts and packaging
+
+| File | Baseline | Local check |
+| --- | --- | --- |
+| `contracts/component.json` | Tested | Name, paths, port, targets, optional schema |
+| `contracts/workload.yaml` | Partial | Metadata parity, optional schema |
+| `contracts/openapi.yaml` | Missing | Optional local health contract, not full OpenAPI |
+| `schemas/component.schema.json` | Optional | Valid and invalid document checks |
+| `schemas/hello.schema.json` | Optional | Syntax and valid/invalid document checks |
+| `schemas/workload.schema.json` | Optional | Syntax and valid/invalid document checks |
+| `schemas/hello.xsd` | Optional | XML syntax and valid/invalid structure |
+| `Dockerfile` | Partial | Source instructions and digest pin, no build |
+| `.dockerignore` | Missing | Literal exclusion list, native matching pending |
+| `compose.yaml` | Optional | Sample service contract, optional Compose CLI |
+| `.editorconfig` | Partial | Selected settings, no editor integration |
+| `.gitattributes` | Partial | Git resolves text and LF rules |
+
+The root `.gitignore` is copied into a temporary repository to test generated
+paths and confirm application source remains visible to Git. This does not
+edit repository-wide rules.
+
+## Checks and guides
+
+| File | Baseline | Local check |
+| --- | --- | --- |
+| `Makefile` | Tested | Required targets, dry run, root delegation |
+| `scripts/verify.py` | Tested | Source and parity checks with invalid examples |
+| `scripts/check_schemas.py` | Optional | Schema and YAML contract checks |
+| `scripts/smoke.sh` | Partial | Shell syntax. Runtime smoke is opt-in |
+| `tests/test_hello.py` | Tested | Data and page tests |
+| `tests/test_specimens.py` | Tested | Extra format specimens |
+| `tests/test_component.py` | Tested | Make interface and checksums |
+| `tests/test_coverage.py` | New | Negative source tests and Git rules |
+| `README.md` | Optional | Prose checker |
+| `docs/FILES.md` | Optional | Prose checker and file inventory |
+| `docs/CHECKS.md` | Optional | Prose checker and command review |
+| `docs/MAKE-CONTRACT.md` | Optional | Prose checker and Make interface review |
+
+Baseline describes the checks present before the coverage update. Partial
+means a limited assertion exists. Optional means a separate tool is needed.
+The local check column describes intended coverage, not a CI result or a claim
+that every grammar and runtime behavior has been tested.

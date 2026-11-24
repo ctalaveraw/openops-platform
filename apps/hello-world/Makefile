@@ -1,4 +1,4 @@
-# Local fixture commands only. No connection to the platform root Makefile.
+# Child Makefile. Root make check delegates here.
 .DEFAULT_GOAL := help
 SHELL := /bin/sh
 PYTHON ?= python3
@@ -10,12 +10,14 @@ IMAGE ?= openops-hello-world:local
 help:
 	@printf '%s\n' \
 		'make check         Run offline checks and unit tests' \
+		'make lint          Check source and fixture parity' \
+		'make test          Run the offline unit tests' \
 		'make run           Serve public/ locally (development only)' \
 		'make smoke         Check a running server on PORT (default: 8080)' \
 		'make compose-check Validate Compose without starting containers' \
 		'make build         Build local image (requires Docker)' \
 		'make up/down       Start or stop optional Compose service' \
-		'make schema-check  Validate schemas (optional Python libraries)' \
+		'make schema-check  Check schemas and YAML contracts (optional libraries)' \
 		'make diagram-check Validate example DOT graph (optional Graphviz)' \
 		'make prose-check   Run vendored SlopMonster on docs and banner'
 
@@ -50,7 +52,7 @@ down:
 schema-check:
 	@$(PYTHON) scripts/check_schemas.py
 
-# Existing OpenOps tool, optional until the platform enables this application.
+# Use the vendored checker on local documentation and the page.
 prose-check:
 	@test -f ../../vendor/slopmonster/deslop.py || { echo 'SlopMonster is missing; run from an OpenOps checkout.' >&2; exit 2; }
 	@for path in README.md docs/FILES.md docs/CHECKS.md docs/MAKE-CONTRACT.md public/index.html; do \
