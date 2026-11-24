@@ -25,9 +25,6 @@ Run `make check-required-prose` to scan paths declared in
 which is outside the general `lint-prose` discovery scope.
 Missing documents and invalid manifest entries fail the check.
 
-Run `make test-ci` to exercise root-owned CI checker tests.
-This target is included in `make check` and rejects empty test suites.
-
 ## Exit status
 
 - `0`: every selected file passed.
@@ -43,6 +40,6 @@ SlopMonster uses English pattern matching. A score of 5/5 means no scored
 patterns matched. It does not establish factual accuracy or authorship.
 Review findings for context and keep the intended meaning when editing.
 
-This target is optional.
-Run `make check` for the required gate.
+`make lint-prose` is optional. `make check-required-prose` runs under
+the required `make check` gate.
 See [the required check instructions](checks.md).

@@ -21,6 +21,10 @@ ShellCheck runs when shell scripts are present.
 Application HTML and CSS are checked when present.
 The gate also validates GitHub Actions workflows.
 The root check delegates to the Hello World component's offline tests.
+It also runs `make test-ci` for root CI validator tests and
+`make check-coordination` for delivery safety and required prose.
+Run `make check-delivery-guard` or `make check-required-prose`
+to troubleshoot those checks independently.
 See [Hello World delivery](../delivery/hello-world.md) for separate image checks.
 Run `make lint-prose` for the optional prose review.
 

@@ -53,7 +53,9 @@ homelab; OpenOps-specific rollout and parity checks remain independent tasks.
 
 Use Git, GNU Make, and uv 0.13.9.
 Run `make bootstrap`, then `make check`.
-Use `make check-coordination` to check the delivery guard and shared docs.
+Use `make check-coordination` for delivery safety and required prose.
+Run `make check-delivery-guard`, `make check-required-prose`, or
+`make test-ci` to isolate a root check failure. All run under `make check`.
 Bootstrap installs Python 3.12 in uv's managed storage.
 Python tooling and Node/npm live in `.venv`.
 JavaScript linters live in ignored `node_modules/`.

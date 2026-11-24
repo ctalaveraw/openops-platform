@@ -31,8 +31,9 @@ Other rules retain their pinned tool defaults.
 The explicit return-code scheme distinguishes rule findings from an empty scope.
 A finding or execution error exits nonzero and stops the required gate.
 The checker does not edit files or install dependencies.
-It checks Markdown structure and style; link targets and prose quality have
-separate checks.
+It checks Markdown structure and style; it does not verify link targets.
+Use `make lint-prose` for an optional wording review. That check does
+not establish factual accuracy.
 
 ## Reproduce
 
