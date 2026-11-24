@@ -1,7 +1,7 @@
 # ADR 0001: Offline component boundaries
 
-Status: proposed for review. Merge records acceptance.
-Owner: lane 00. Reviewers: project maintainers.
+Status: accepted in PR #218.
+Owner: repository maintainers.
 
 ## Decision
 
@@ -19,29 +19,31 @@ service installations and environment configuration.
 Paths in the destination column need not exist yet. Existing paths stay until
 a dedicated migration PR. Tests stay with their component.
 
-| Lane | Current scope | Destination |
+| Responsibility | Current scope | Destination |
 | --- | --- | --- |
-| 00 | Root Make, shared CI, locks, ADRs and contracts | Same |
-| 01 | `scripts/ci/`, `docs/ci/`, `tests/validation/` | `platform/` |
-| 02 | `apps/hello-world/` | Same |
-| 03 | `scripts/delivery/`, `docs/delivery/` | `delivery/` |
-| 04 | New provisioning modules | `infrastructure/` |
-| 05 | New host configuration | `configuration/` |
-| 06 | New policy rules | `policy/` |
-| 07 | New forge adapters | `integrations/forge/` |
-| 08 | `scripts/notifications/`, `tests/notifications/`, `examples/notifications/` | `integrations/chatops/` |
-| 08G | Gotify adapter only | `integrations/chatops/gotify/` |
-| 09 | New event schemas and mappings | `events/` |
-| 10 | Monitoring rules and tests | `observability/` |
-| 11 | Recovery design | Path to be agreed |
-| 90 | Cross-component test design | `tests/integration/` after review |
-| 91, 92 | Reference environment | ARM homelab repository |
-| 99 | Issue and PR tracking | No source ownership |
+| Repository maintainers | Root Make, shared CI, locks, ADRs and contracts | Existing root paths |
+| Platform validation | `scripts/ci/`, `docs/ci/`, `tests/validation/` | `platform/` |
+| Application workload | `apps/hello-world/` | Unchanged |
+| Application delivery | `scripts/delivery/`, `docs/delivery/` | `delivery/` |
+| Infrastructure provisioning | New provisioning modules | `infrastructure/` |
+| Configuration management | New host configuration | `configuration/` |
+| Policy and security | New policy rules | `policy/` |
+| Forge integrations | New forge adapters | `integrations/forge/` |
+| ChatOps notifications | `scripts/notifications/`, `tests/notifications/`, `examples/notifications/` | `integrations/chatops/` |
+| Gotify adapter | Gotify-specific integration | `integrations/chatops/gotify/` |
+| Event processing | New event schemas and mappings | `events/` |
+| Observability | Monitoring rules and tests | `observability/` |
+| Recovery operations | Recovery design | Path to be agreed |
+| Cross-component testing | Integration test design | `tests/integration/` after review |
+| Reference operations | ARM homelab services | Separate ARM homelab repository |
+| Issue and PR tracking | GitHub records | No source directory |
 
-Lane 08 excludes the Gotify subdirectory. Shared interface changes from any
-lane go through 00. A component can propose a dependency by naming its version and license.
-Explain why it is needed and how to install and test it. Only 00 edits root locks and generic
-workflow wiring. Separate feature branches keep unrelated changes out of a PR.
+ChatOps owns the shared notification behavior. The Gotify adapter owns its
+provider-specific implementation. Changes to shared interfaces require review
+by repository maintainers. Dependency proposals must name the version and
+license, explain why the tool is needed, and show how to test it. Repository
+maintainers own root locks and generic workflow wiring. Separate feature
+branches keep unrelated changes out of a PR.
 
 ## Admission
 
@@ -52,9 +54,9 @@ the parent check from a child. No automatic discovery of executable targets.
 
 ## Delivery pause
 
-Keep existing delivery code. Remove automatic image triggers while the team
-builds components offline. Manual validation does not grant publication rights.
-Publication requires a separate explicit request on canonical main.
+Keep existing delivery code. Automatic image triggers are disabled while
+components are developed offline. Manual validation does not grant publication
+rights. Publication requires a separate explicit request on canonical main.
 Do not run either operation during the pause without authorization.
 
 See [delivery instructions](../delivery/hello-world.md) and
@@ -67,3 +69,6 @@ Component tests can run before deployment. A new component is not part of the
 root gate until admitted. Live service integration, recovery and forge parity
 need their own evidence. Revisit these boundaries if a component cannot be
 tested or changed without coupling to another.
+
+Repository documents and correspondence follow the
+[engineering writing standard](../engineering-writing.md).
