@@ -1,0 +1,107 @@
+rule_files:
+  - ../rules/availability.yml
+evaluation_interval: 1m
+tests:
+  - name: sustained failure and recovery
+    interval: 1m
+    input_series:
+      - series: 'probe_success{job="openops-http",instance="hello-world"}'
+        values: '1 0 0 0 1 1'
+    alert_rule_test:
+      - eval_time: 0m
+        alertname: HelloWorldProbeUnavailable
+        exp_alerts: []
+      - eval_time: 1m
+        alertname: HelloWorldProbeUnavailable
+        exp_alerts: []
+      - eval_time: 2m
+        alertname: HelloWorldProbeUnavailable
+        exp_alerts: []
+      - eval_time: 3m
+        alertname: HelloWorldProbeUnavailable
+        exp_alerts:
+          - exp_labels:
+              instance: hello-world
+              job: openops-http
+              severity: warning
+              owner: observability
+            exp_annotations:
+              summary: Hello World probe unavailable
+              description: Probe failed or telemetry is missing. Inspect probe and scrape health.
+              runbook_url: https://github.com/ctalaveraw/openops-platform/blob/main/observability/docs/RUNBOOK.md
+      - eval_time: 4m
+        alertname: HelloWorldProbeUnavailable
+        exp_alerts: []
+    promql_expr_test:
+      - expr: openops:probe_success:current
+        eval_time: 0m
+        exp_samples:
+          - labels: 'openops:probe_success:current{instance="hello-world",job="openops-http"}'
+            value: 1
+      - expr: openops:probe_success:current
+        eval_time: 2m
+        exp_samples:
+          - labels: 'openops:probe_success:current{instance="hello-world",job="openops-http"}'
+            value: 0
+      - expr: openops:probe_success:current
+        eval_time: 4m
+        exp_samples:
+          - labels: 'openops:probe_success:current{instance="hello-world",job="openops-http"}'
+            value: 1
+  - name: transient failure
+    interval: 1m
+    input_series:
+      - series: 'probe_success{job="openops-http",instance="hello-world"}'
+        values: '1 0 1 1 1'
+    alert_rule_test:
+      - eval_time: 1m
+        alertname: HelloWorldProbeUnavailable
+        exp_alerts: []
+      - eval_time: 2m
+        alertname: HelloWorldProbeUnavailable
+        exp_alerts: []
+      - eval_time: 3m
+        alertname: HelloWorldProbeUnavailable
+        exp_alerts: []
+      - eval_time: 4m
+        alertname: HelloWorldProbeUnavailable
+        exp_alerts: []
+  - name: missing data is not healthy
+    interval: 1m
+    input_series:
+      - series: 'probe_success{job="openops-http",instance="hello-world"}'
+        values: '1 stale _ _ 1 1'
+    alert_rule_test:
+      - eval_time: 0m
+        alertname: HelloWorldProbeUnavailable
+        exp_alerts: []
+      - eval_time: 1m
+        alertname: HelloWorldProbeUnavailable
+        exp_alerts: []
+      - eval_time: 2m
+        alertname: HelloWorldProbeUnavailable
+        exp_alerts: []
+      - eval_time: 3m
+        alertname: HelloWorldProbeUnavailable
+        exp_alerts:
+          - exp_labels:
+              instance: hello-world
+              job: openops-http
+              severity: warning
+              owner: observability
+            exp_annotations:
+              summary: Hello World probe unavailable
+              description: Probe failed or telemetry is missing. Inspect probe and scrape health.
+              runbook_url: https://github.com/ctalaveraw/openops-platform/blob/main/observability/docs/RUNBOOK.md
+      - eval_time: 4m
+        alertname: HelloWorldProbeUnavailable
+        exp_alerts: []
+    promql_expr_test:
+      - expr: openops:probe_success:current
+        eval_time: 2m
+        exp_samples: []
+      - expr: openops:probe_success:current
+        eval_time: 4m
+        exp_samples:
+          - labels: 'openops:probe_success:current{instance="hello-world",job="openops-http"}'
+            value: 1
