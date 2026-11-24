@@ -50,23 +50,61 @@ def markdown_inputs() -> list[Path]:
     return sorted(path for path in paths if path.suffix == ".md" and path.is_file())
 
 
+def required_markdown_inputs(root: Path) -> list[Path]:
+    """Select required documents from the repository manifest."""
+    manifest = root / "scripts/ci/required-prose.txt"
+
+    names = [
+        line.strip()
+        for line in manifest.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+
+    if not names:
+        raise ValueError("required prose manifest is empty")
+
+    if len(names) != len(set(names)):
+        raise ValueError("duplicate required prose path")
+
+    paths = []
+
+    for name in names:
+        relative = Path(name)
+
+        if relative.is_absolute() or ".." in relative.parts or relative.suffix != ".md":
+            raise ValueError(f"invalid required prose path: {name}")
+
+        path = root / relative
+
+        if not path.resolve().is_relative_to(root.resolve()):
+            raise ValueError(f"path escapes repository: {name}")
+
+        if not path.is_file():
+            raise ValueError(f"missing required prose document: {name}")
+
+        paths.append(path)
+
+    return paths
+
+
 # Executing function
 def main() -> int:
-    if len(sys.argv) != 1:
-        print(
-            "ERROR lint-prose: this command accepts no path arguments.", file=sys.stderr
-        )
+    if sys.argv[1:] not in ([], ["--required"]):
+        print("ERROR lint-prose: expected no arguments or --required.", file=sys.stderr)
         return 2
+
+    required = sys.argv[1:] == ["--required"]
+    label = "check-required-prose" if required else "lint-prose"
 
     try:
         verify_vendor()
-        paths = markdown_inputs()
+        paths = required_markdown_inputs(ROOT) if required else markdown_inputs()
         if not paths:
             raise ValueError("no Markdown inputs were selected")
 
         failures = 0
         for path in paths:
-            print(f"RUN lint-prose: {path.relative_to(ROOT)}", flush=True)
+            print(f"RUN {label}: {path.relative_to(ROOT)}", flush=True)
             result = subprocess.run(
                 [sys.executable, str(VENDOR / "deslop.py"), str(path)],
                 cwd=ROOT,
@@ -81,14 +119,14 @@ def main() -> int:
         TypeError,
         subprocess.CalledProcessError,
     ) as error:
-        print(f"ERROR lint-prose: {error}", file=sys.stderr)
+        print(f"ERROR {label}: {error}", file=sys.stderr)
         return 2
 
     if failures:
-        print(f"FAIL lint-prose: {failures} file(s) returned nonzero.", file=sys.stderr)
+        print(f"FAIL {label}: {failures} file(s) returned nonzero.", file=sys.stderr)
         return 1
 
-    print(f"PASS lint-prose: {len(paths)} file(s) checked.", flush=True)
+    print(f"PASS {label}: {len(paths)} file(s) checked.", flush=True)
     return 0
 
 

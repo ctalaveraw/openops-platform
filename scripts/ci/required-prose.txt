@@ -1,0 +1,4 @@
+README.md
+docs/adr/0001-offline-components.md
+contracts/component-v1.md
+docs/delivery/hello-world.md

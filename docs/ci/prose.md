@@ -18,6 +18,16 @@ using the same Python interpreter that launched the wrapper.
 The check reads source files and prints findings. It makes no network requests
 and does not rewrite documentation.
 
+## Required prose and CI tests
+
+Run `make check-required-prose` to scan paths declared in
+`scripts/ci/required-prose.txt`. This includes the component contract,
+which is outside the general `lint-prose` discovery scope.
+Missing documents and invalid manifest entries fail the check.
+
+Run `make test-ci` to exercise root-owned CI checker tests.
+This target is included in `make check` and rejects empty test suites.
+
 ## Exit status
 
 - `0`: every selected file passed.
