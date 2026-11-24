@@ -1,28 +1,39 @@
 name: Hello World image
 
 "on":
-  pull_request:
-    paths:
-      - apps/hello-world/**
-      - scripts/delivery/check_hello_image.sh
-      - .github/workflows/hello-image.yml
-      - Makefile
-  push:
-    branches:
-      - main
-    paths:
-      - apps/hello-world/**
-      - scripts/delivery/check_hello_image.sh
-      - .github/workflows/hello-image.yml
-      - Makefile
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: Validate the image or explicitly publish it
+        type: choice
+        required: true
+        default: validate
+        options:
+          - validate
+          - publish
 
 permissions:
   contents: read
 
 jobs:
+  reject:
+    name: Reject unauthorized publication
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      inputs.operation == 'publish' &&
+      (github.ref != 'refs/heads/main' ||
+      github.repository != 'ctalaveraw/openops-platform')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 1
+    steps:
+      - name: Reject request
+        run: |
+          echo 'Publication requires canonical main.' >&2
+          exit 1
+
   verify:
-    name: Build and smoke on PR
-    if: github.event_name == 'pull_request'
+    name: Build and smoke on request
+    if: github.event_name == 'workflow_dispatch' && inputs.operation == 'validate'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
@@ -44,7 +55,11 @@ jobs:
 
   publish:
     name: Test and publish from main
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      inputs.operation == 'publish' &&
+      github.ref == 'refs/heads/main' &&
+      github.repository == 'ctalaveraw/openops-platform'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:

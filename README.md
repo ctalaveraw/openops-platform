@@ -10,8 +10,8 @@ with observability and recovery procedures for deployed services.
 ## Project status
 
 **Source checks and a disposable app are implemented.** The Hello World fixture
-can be tested without a container or a cluster. The delivery workflow tests a
-local container on PRs and is configured to publish from trusted `main` pushes.
+can be tested without a container or a cluster. The image workflow runs only on request.
+Publication requires an explicit request on canonical `main`.
 No live Kubernetes deployment has been verified.
 
 ## First workload
@@ -22,6 +22,9 @@ both the platform and the workload. Neither command builds or deploys an image.
 
 See [Hello World delivery](docs/delivery/hello-world.md) for the image smoke test,
 trusted registry publication, and the separate runtime-deployment boundary.
+
+See the [component boundaries](docs/adr/0001-offline-components.md) and
+[component contract v1](contracts/component-v1.md) before adding root checks.
 
 ## Engineering handbook
 
@@ -50,6 +53,7 @@ homelab; OpenOps-specific rollout and parity checks remain independent tasks.
 
 Use Git, GNU Make, and uv 0.13.9.
 Run `make bootstrap`, then `make check`.
+Use `make check-coordination` to check the delivery guard and shared docs.
 Bootstrap installs Python 3.12 in uv's managed storage.
 Python tooling and Node/npm live in `.venv`.
 JavaScript linters live in ignored `node_modules/`.

@@ -23,25 +23,33 @@ a container engine is available.
 
 ## GitHub workflow
 
-`.github/workflows/hello-image.yml` runs the image check on pull requests.
-It does not send credentials or publish images from PRs.
+The image workflow is manual. Pull requests and pushes run the existing
+repository checks, not the image workflow. The prior delivery implementation
+and evidence from PR #164 remain in Git.
 
-For a trusted push to `main` that changes the workload or its delivery
-configuration, a separate job builds and checks one image, then publishes that
-**same local image** to `ghcr.io/ctalaveraw/openops-platform-hello-world`.
-Only that job requests `packages: write`. The tag is `sha-<full Git SHA>`.
-The job prints the registry digest. Use the digest to identify a release,
-not a mutable tag. The registry's package permissions and visibility still
-need an operator review. The image is not automatically made public.
+After review and explicit authorization, select Actions, Hello World image,
+Run workflow. Choose a branch and an operation:
 
-GitHub Actions uses a pinned checkout action. The Docker commands and app
-checks work outside GitHub. Forgejo runner parity has not been verified.
+| Operation | Allowed source | Effect |
+| --- | --- | --- |
+| `validate` (default) | Selected ref | Build and smoke-test locally on a runner. No registry write. |
+| `publish` | Canonical `main` only | Build, test and push the same image to GHCR. |
+
+Both operations are deferred during offline development. An unauthorized
+publish request fails without running a build. The publish job alone requests
+`packages: write`. The dispatch requires repository write access. This job
+guard does not replace repository permissions or an independently enforced
+deployment approval. Do not rerun historical push-based image runs.
+
+Publication tags the image with `sha-<full Git SHA>` and records the digest.
+Registry visibility and permissions still need review. Forgejo parity remains
+untested. The scripts can run outside GitHub.
 
 ## Runtime deployment
 
 A successful container smoke test is a temporary deployment on the CI runner.
 Publication is not a Kubernetes release. No cluster credentials, Flux files,
-production hostnames or live-site changes are included in this PR.
+production hostnames or live-site changes are part of this workflow.
 
 After reviewing the published digest, a separate GitOps change can reference
 `ghcr.io/ctalaveraw/openops-platform-hello-world@sha256:<digest>`.
