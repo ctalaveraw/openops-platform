@@ -8,7 +8,7 @@
 SHELL := /bin/sh
 
 # Define tasks, .PHONY is used to not collide with files that match task names
-.PHONY: help bootstrap setup doctor-python check check-apps check-coordination lint lint-markdown lint-yaml lint-python lint-shell lint-json lint-toml lint-make lint-web lint-prose validate-actions
+.PHONY: help bootstrap setup doctor-python check check-delivery-guard check-required-prose check-apps check-coordination lint lint-markdown lint-yaml lint-python lint-shell lint-json lint-toml lint-make lint-web lint-prose validate-actions
 
 help:
 	@echo "setup			Install locked repository tooling"
@@ -27,6 +27,9 @@ help:
 	@echo "check-apps\t\tRun independent application checks"
 	@echo "check-coordination\tCheck delivery guard and coordination docs"
 	@echo "check			Run required checks"
+	@echo "check-delivery-guard\tRun delivery safety tests"
+	@echo "check-required-prose\tCheck required repository documents"
+	@echo "test-ci\t\tRun root CI unit tests"
 
 # Prepare the project runtime, then install locked tooling
 bootstrap:
@@ -43,7 +46,7 @@ doctor-python:
 	@uv sync --locked --no-python-downloads --offline --check --quiet
 
 # "check" requires platform gates and application checks
-check: lint validate-actions check-apps check-coordination
+check: lint validate-actions check-apps check-coordination test-ci
 
 # "lint" runs the required source checks
 lint: lint-markdown lint-yaml lint-python lint-shell lint-json lint-toml lint-make lint-web
@@ -92,10 +95,19 @@ validate-actions: doctor-python
 check-apps:
 	@$(MAKE) -C apps/hello-world check
 
-# Shared workflow guard and architecture prose. No delivery commands.
-check-coordination: doctor-python
+# Run both independently owned coordination checks.
+check-coordination: check-delivery-guard check-required-prose
+
+# Verify that image delivery remains explicitly authorized.
+check-delivery-guard: doctor-python
 	@.venv/bin/python -m unittest discover -s tests/coordination -v
-	@.venv/bin/python vendor/slopmonster/deslop.py README.md
-	@.venv/bin/python vendor/slopmonster/deslop.py docs/adr/0001-offline-components.md
-	@.venv/bin/python vendor/slopmonster/deslop.py contracts/component-v1.md
-	@.venv/bin/python vendor/slopmonster/deslop.py docs/delivery/hello-world.md
+
+# Review the required repository documents.
+check-required-prose: doctor-python
+	@.venv/bin/python scripts/ci/check_prose.py --required
+
+.PHONY: test-ci
+
+# Run root-owned CI validator unit tests.
+test-ci: doctor-python
+	@.venv/bin/python -m scripts.ci.run_ci_tests

@@ -18,6 +18,13 @@ using the same Python interpreter that launched the wrapper.
 The check reads source files and prints findings. It makes no network requests
 and does not rewrite documentation.
 
+## Required prose and CI tests
+
+Run `make check-required-prose` to scan paths declared in
+`scripts/ci/required-prose.txt`. This includes the component contract,
+which is outside the general `lint-prose` discovery scope.
+Missing documents and invalid manifest entries fail the check.
+
 ## Exit status
 
 - `0`: every selected file passed.
@@ -33,6 +40,6 @@ SlopMonster uses English pattern matching. A score of 5/5 means no scored
 patterns matched. It does not establish factual accuracy or authorship.
 Review findings for context and keep the intended meaning when editing.
 
-This target is optional.
-Run `make check` for the required gate.
+`make lint-prose` is optional. `make check-required-prose` runs under
+the required `make check` gate.
 See [the required check instructions](checks.md).

@@ -22,7 +22,7 @@ using the repository's `.yamllint.yaml` configuration.
 
 Strict mode makes warnings fail the check.
 The checker reads files and reports findings without rewriting them.
-Actions workflow validation will be handled by a separate check.
+GitHub Actions workflow validation runs through `make validate-actions`.
 
 ## Exit status
 
