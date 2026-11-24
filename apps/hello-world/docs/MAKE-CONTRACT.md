@@ -13,7 +13,11 @@ make -C apps/hello-world check
 ```
 
 From this directory, use `make check`. Both forms run the same tasks.
-`check` uses local Python and shell tools. It does not start a container or
+
+Focused `check-static` and `check-formats` targets accept `CASE`.
+They are diagnostic commands, not additions to the required component
+interface. The full `check` target runs all required checks.
+`check` uses Python, Make, Git and shell tools. It does not start a container or
 contact the network.
 
 ## Parent delegation
@@ -45,5 +49,5 @@ configuration read by a running service. No platform process consumes it today.
 ## When a check fails
 
 Run `make -C apps/hello-world test` to see which assertion failed. For format
-errors, inspect `fixtures/`; for banner errors, inspect `public/`. Avoid editing
+errors, inspect `fixtures/`. For banner errors, inspect `public/`. Avoid editing
 the parent workflow to bypass a failed child test.
