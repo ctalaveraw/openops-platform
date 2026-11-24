@@ -1,0 +1,18 @@
+{
+  "specversion": "1.0",
+  "id": "66b9a9297138444b9e63952970f892eb435c0c675dec1439cd370b9e6699c7db",
+  "source": "https://github.com/example/openops-platform",
+  "type": "dev.openops.forge.pull_request.snapshot.v1",
+  "subject": "pulls/17",
+  "datacontenttype": "application/json",
+  "data": {
+    "schema_version": 1,
+    "provider": "github",
+    "repository": "example/openops-platform",
+    "number": 17,
+    "state": "open",
+    "revision": "0123456789abcdef0123456789abcdef01234567",
+    "logical_change": "example/openops-platform@0123456789abcdef0123456789abcdef01234567",
+    "url": "https://github.com/example/openops-platform/pull/17"
+  }
+}
