@@ -18,7 +18,7 @@ using the same Python interpreter that launched the wrapper.
 The check reads source files and prints findings. It makes no network requests
 and does not rewrite documentation.
 
-## Required prose and CI tests
+## Required prose
 
 Run `make check-required-prose` to scan paths declared in
 `scripts/ci/required-prose.txt`. This includes the component contract,

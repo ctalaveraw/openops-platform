@@ -22,7 +22,7 @@ a dedicated migration PR. Tests stay with their component.
 | Responsibility | Current scope | Destination |
 | --- | --- | --- |
 | Repository maintainers | Root Make, shared CI, locks, ADRs and contracts | Existing root paths |
-| Platform validation | `scripts/ci/`, `docs/ci/`, `tests/validation/` | `platform/` |
+| Platform validation | `scripts/ci/`, `docs/ci/`, `tests/ci/` | `platform/` |
 | Application workload | `apps/hello-world/` | Unchanged |
 | Application delivery | `scripts/delivery/`, `docs/delivery/` | `delivery/` |
 | Infrastructure provisioning | New provisioning modules | `infrastructure/` |

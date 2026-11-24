@@ -49,8 +49,6 @@ homelab; OpenOps-specific rollout and parity checks remain independent tasks.
 
 ## Local checks
 
-### Markdown
-
 Use Git, GNU Make, and uv 0.13.9.
 Run `make bootstrap`, then `make check`.
 Use `make check-coordination` for delivery safety and required prose.
@@ -59,6 +57,11 @@ Run `make check-delivery-guard`, `make check-required-prose`, or
 Bootstrap installs Python 3.12 in uv's managed storage.
 Python tooling and Node/npm live in `.venv`.
 JavaScript linters live in ignored `node_modules/`.
+
+### Markdown
+
+Run `make lint-markdown` to check repository Markdown.
+This target also runs through `make check`.
 
 See [the Markdown check instructions](docs/ci/markdown.md).
 
